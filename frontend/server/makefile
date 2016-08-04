@@ -3,7 +3,7 @@ CFLAGS = -c -Wall -I./
 LDFLAGS = -Ofast -L./
 LDLIBS = -lmicrohttpd -lpthread -ltcmalloc_minimal
 SOURCE = src/
-PROJECT = micsrv
+PROJECT = frontend
 
 all: $(PROJECT)
 

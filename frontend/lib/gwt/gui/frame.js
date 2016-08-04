@@ -56,6 +56,7 @@ Gwt.Gui.Frame = function ()
 	this.TextShadowOffsy = null;
 	this.UserSelect = null;
 	this.Valign = null;
+	this.Visibility = null;
 	this.Width = null;
 	this.ZIndex = null;
 	this.ClassName = null;
@@ -125,6 +126,7 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
 	this.TextShadowOffsy = null;
 	this.UserSelect = null;
 	this.Valign = null;
+	this.Visibility = null;
 	this.Width = null;
 	this.ZIndex = null;
 	this.ClassName = null;
@@ -575,6 +577,12 @@ Gwt.Gui.Frame.prototype.SetValign = function (Valign)
 {
 	this.Valign = Valign;
 	this.Html.style.verticalAlign = this.Valign;
+}
+
+Gwt.Gui.Frame.prototype.SetVisibility = function (Value)
+{
+	this.Visibility = Value;
+	this.Html.style.visibility = this.Visibility;
 }
 
 Gwt.Gui.Frame.prototype.SetExpand = function (Expand)

@@ -30,6 +30,7 @@ cat gui/window.js >> gwt.js
 cat gui/dialog.js >> gwt.js
 cat gui/button.js >> gwt.js
 cat gui/entry.js >> gwt.js
+cat gui/file.js >> gwt.js
 cat gui/text.js >> gwt.js
 cat gui/hbox.js >> gwt.js
 cat gui/image.js >> gwt.js

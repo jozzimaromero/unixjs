@@ -9,6 +9,8 @@ function test ()
 	this.SetSize (256, 256);
 	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
     
+	this.file1 = new Gwt.Gui.File ();
+	
     this.graphic = new Gwt.Graphic.Svg.Canvas ();
     this.graphic.SetSize (this.GetWidth(), this.GetHeight ());
 	this.graphic.SetViewBox (0, 0, this.graphic.GetWidth(), this.graphic.GetHeight());
@@ -39,12 +41,13 @@ function test ()
 	this.arc1.SetStrokeWidth (1);
 	
 	
-    this.Add (this.graphic);
-	this.graphic.Add (this.rect1);
+    this.Add (this.file1);
+	
+	/*this.graphic.Add (this.rect1);
 	this.graphic.Add (this.circle1);
 	this.graphic.Add (this.ellipse1);
 	this.graphic.Add (this.line1);
-	this.graphic.Add (this.arc1);
+	this.graphic.Add (this.arc1);*/
 
 }
 

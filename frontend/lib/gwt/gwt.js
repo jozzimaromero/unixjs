@@ -11,23 +11,54 @@ Gwt.Core.Contrib = {
 	"request_id": 0,
 };
 //Gwt::Core::Request
-Gwt.Core.Request = function (app, method, params, callback)
+Gwt.Core.Request = function (Func, Url, Data)
 {
-	Gwt.Core.Contrib.request_id++;
-	this.xmlhttp = new XMLHttpRequest ();
-	this.xmlhttp.onreadystatechange = this.ready.bind(this, callback);
-	this.xmlhttp.open ("POST", "/backend/"+app+"/"+method, true);
-	this.xmlhttp.setRequestHeader ("Content-Type", "application/x-www-form-urlencoded");
-	this.data = "params="+JSON.stringify(params);
-	this.xmlhttp.send (this.data);
+	XMLHttpRequest.call (this);
+			
+	this.Func = null;
+	this.Url = null;
+	this.Data = null;
+	this.InitRequest (Func, Url, Data);
 }
 
-Gwt.Core.Request.prototype.ready = function (callback)
+Gwt.Core.Request.prototype = new XMLHttpRequest ();
+Gwt.Core.Request.prototype.constructor = Gwt.Core.Request;
+
+Gwt.Core.Request.prototype.InitRequest = function (Func, Url, Data)
 {
-	if (this.xmlhttp.readyState == 4 && this.xmlhttp.status == 200)
+	this.Func  = Func;
+	this.Url = Url;
+	this.Data = Data;
+	this.onreadystatechange = this.Ready.bind(this);
+	this.open ("POST", url, true);
+	this.SetXWWWFormUrlEncode ();
+}
+
+Gwt.Core.Request.prototype.Ready = function ()
+{
+	if (this.readyState == 4 && this.status == 200)
 	{
-		callback(this.xmlhttp.response);
+		this.Func("callback", this.response);
 	}
+}
+
+Gwt.Core.Request.prototype.Send = function ()
+{
+	this.send (this.data);
+}
+
+Gwt.Core.Request.prototype.SendXW3FormUrlEncode = function ()
+{
+	this.setRequestHeader ("Content-Type", "application/x-www-form-urlencoded");
+	var data = "data="+JSON.stringify(this.Data);
+	console.log (data);
+}
+
+Gwt.Core.Request.prototype.SendMultiparFormData = function ()
+{
+	this.sBoundary = "---------------------------" + Date.now().toString(16);
+    this.setRequestHeader("Content-Type", "multipart\/form-data; boundary=" + this.sBoundary);
+	var data = "data="+JSON.stringify(this.Data);
 }
 //End of Gwt::Core::Request
 //##########################################################
@@ -1316,6 +1347,7 @@ Gwt.Gui.Frame = function ()
 	this.TextShadowOffsy = null;
 	this.UserSelect = null;
 	this.Valign = null;
+	this.Visibility = null;
 	this.Width = null;
 	this.ZIndex = null;
 	this.ClassName = null;
@@ -1385,6 +1417,7 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
 	this.TextShadowOffsy = null;
 	this.UserSelect = null;
 	this.Valign = null;
+	this.Visibility = null;
 	this.Width = null;
 	this.ZIndex = null;
 	this.ClassName = null;
@@ -1837,6 +1870,12 @@ Gwt.Gui.Frame.prototype.SetValign = function (Valign)
 	this.Html.style.verticalAlign = this.Valign;
 }
 
+Gwt.Gui.Frame.prototype.SetVisibility = function (Value)
+{
+	this.Visibility = Value;
+	this.Html.style.visibility = this.Visibility;
+}
+
 Gwt.Gui.Frame.prototype.SetExpand = function (Expand)
 {
 	this.Expand = Expand;
@@ -2067,6 +2106,7 @@ Gwt.Gui.Entry.prototype.FinalizeEntry = function ()
 Gwt.Gui.Entry.prototype.InitEntry = function (Placeholder)
 {
 	this.SetHtml ("input");
+	this.Html.setAttribute ("type", "text");
 	this.SetClassName ("Gwt_Gui_Entry");
 	this.SetExpand (true);
 	this.SetPadding (3);
@@ -2110,6 +2150,34 @@ Gwt.Gui.Entry.prototype.Reset = function ()
 	this.SetText ("");
 }
 //Ends Gwt::Gui::Entry
+//##################################################################################################
+//##############################################################################################
+//Class Gwt::Gui::File
+Gwt.Gui.File  = function (Placeholder)
+{
+	Gwt.Gui.Frame.call (this);
+	this.InitFile ();
+}
+
+Gwt.Gui.File.prototype = new Gwt.Gui.Frame ();
+Gwt.Gui.File.prototype.constructor = Gwt.Gui.File;
+
+Gwt.Gui.File.prototype.FinalizeFile = function ()
+{
+	this.FinalizeFrame ();
+}
+
+Gwt.Gui.File.prototype.InitFile = function ()
+{
+	this.SetHtml ("input");
+	this.Html.setAttribute ("type", "file");
+	this.Html.removeAttribute ("multiple");
+	//this.SetOpacity (0);
+	this.SetWidth (180);
+	this.SetClassName ("Gwt_Gui_Text");
+}
+
+//Ends Gwt::Gui::File
 //##################################################################################################
 //##############################################################################################
 //Class Gwt::Gui::Text

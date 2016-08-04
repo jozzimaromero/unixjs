@@ -17,6 +17,7 @@ Gwt.Gui.Entry.prototype.FinalizeEntry = function ()
 Gwt.Gui.Entry.prototype.InitEntry = function (Placeholder)
 {
 	this.SetHtml ("input");
+	this.Html.setAttribute ("type", "text");
 	this.SetClassName ("Gwt_Gui_Entry");
 	this.SetExpand (true);
 	this.SetPadding (3);
