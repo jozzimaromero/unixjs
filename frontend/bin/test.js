@@ -10,6 +10,7 @@ function test ()
 	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
     
 	this.file1 = new Gwt.Gui.File ();
+	this.file1.AddEvent (Gwt.Gui.Event.Form.Change, this.send.bind(this));
 	
     this.graphic = new Gwt.Graphic.Svg.Canvas ();
     this.graphic.SetSize (this.GetWidth(), this.GetHeight ());
@@ -53,6 +54,16 @@ function test ()
 
 test.prototype = new Gwt.Gui.Window ();
 test.prototype.constructor = test;
+
+test.prototype.send = function ()
+{
+	new Gwt.Core.Request ("/backend/upload_file/", this.response.bind (this), this.file1.GetData ());
+}
+
+test.prototype.response = function ()
+{
+	this.file1.Reset ();
+}
 
 return new function ()
 {

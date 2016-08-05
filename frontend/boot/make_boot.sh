@@ -1,4 +1,4 @@
 #!/bin/sh
 
-
-yuicompressor.sh init.js
+cat init.js > boot.js
+yuicompressor.sh boot.js

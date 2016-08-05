@@ -1,8 +1,11 @@
 #!/bin/sh
 
+#root
 cat conf.js > gwt.js
 
+
 #core
+cat core/conf.js >> gwt.js
 cat core/request.js >> gwt.js
 
 
