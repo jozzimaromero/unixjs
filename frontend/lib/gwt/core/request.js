@@ -66,7 +66,10 @@ Gwt.Core.Request.prototype.SendFile = function ()
 Gwt.Core.Request.prototype.SendData = function ()
 {
 	this.XHR.setRequestHeader("Content-Type", "application\/x-www-form-urlencoded");
-	this.XHR.send (this.Data);
+	
+	var RawData = "data="+JSON.stringify(this.Data);
+	
+	this.XHR.send (RawData);
 }
 
 Gwt.Core.Request.prototype.Ready = function ()

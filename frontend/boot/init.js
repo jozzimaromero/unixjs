@@ -3,7 +3,7 @@ window.addEventListener("load", init);
 function init (event)
 {
 	desktop.open();
-	test.open();
+	login.open();
 	
 	/*if (typeof(session_env) != "undefined")
 	{

@@ -278,9 +278,9 @@ test.prototype.send = function ()
 	new Gwt.Core.Request ("/backend/upload_file/", this.response.bind (this), this.file1.GetData ());
 }
 
-test.prototype.response = function ()
+test.prototype.response = function (data)
 {
-	this.file1.Reset ();
+	console.log (data);
 }
 
 return new function ()

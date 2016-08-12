@@ -70,7 +70,6 @@ Gwt.Core.Request.prototype.UploadFile =  function ()
 
 Gwt.Core.Request.prototype.SendFile = function ()
 {
-	console.log (this.FileData.error);
 	this.Multipart.push (this.FileData.result);
 	
 	this.Multipart.push ("\r\n--"+this.Boundary+"--");
@@ -89,7 +88,10 @@ Gwt.Core.Request.prototype.SendFile = function ()
 Gwt.Core.Request.prototype.SendData = function ()
 {
 	this.XHR.setRequestHeader("Content-Type", "application\/x-www-form-urlencoded");
-	this.XHR.send (this.Data);
+	
+	var RawData = "data="+JSON.stringify(this.Data);
+	
+	this.XHR.send (RawData);
 }
 
 Gwt.Core.Request.prototype.Ready = function ()
