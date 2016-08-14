@@ -16,6 +16,8 @@ function desktop ()
 	this.SetBackgroundRepeat (Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat, Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat);
 	this.SetBackgroundSize (Gwt.Gui.Contrib.BackgroundSize.Cover);
 	this.SetBorder (0);
+	
+	new Gwt.Core.Request ("/backend/open_pool/", function () {}, {});
 }
 	
 desktop.prototype = new Gwt.Gui.Frame ();
