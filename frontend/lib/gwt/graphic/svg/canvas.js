@@ -2,7 +2,7 @@
 //Class Gwt::Graphics::Svg::Canvas
 Gwt.Graphic.Svg.Canvas = function ()
 {
-    Gwt.Graphic.Svg.Graphic.call (this);
+    Gwt.Gui.Frame.call (this);
     this.X = null;
     this.Y = null;
     this.ViewBoxMinX = null;
@@ -15,10 +15,11 @@ Gwt.Graphic.Svg.Canvas = function ()
     this.XmlnsXlink = null;
     this.XmlSpace = null;
     
+    
     this.InitCanvas ();
 }
 
-Gwt.Graphic.Svg.Canvas.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Canvas.prototype = new Gwt.Gui.Frame ();
 Gwt.Graphic.Svg.Canvas.prototype.constructor = Gwt.Graphic.Svg.Canvas;
 
 Gwt.Graphic.Svg.Canvas.prototype.InitCanvas = function ()
@@ -32,6 +33,7 @@ Gwt.Graphic.Svg.Canvas.prototype.InitCanvas = function ()
     this.SetPreserveAspectRatio (Gwt.Graphic.Svg.Contrib.AspectRatio.XMaxYMax);
     this.SetZoomAndPan (Gwt.Graphic.Svg.Contrib.ZoomAndPan.Disable);
     this.SetXmlns ("http://www.w3.org/2000/svg", "http://www.w3.org/1999/xlink", "preserve");
+    this.SetPositionType (Gwt.Gui.Contrib.PositionType.Relative);
 }
 
 Gwt.Graphic.Svg.Canvas.prototype.FinalizeCanvas = function ()

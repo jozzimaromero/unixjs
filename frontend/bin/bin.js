@@ -232,6 +232,7 @@ function test ()
 	this.file1 = new Gwt.Gui.File ();
 	this.file1.AddEvent (Gwt.Gui.Event.Form.Change, this.send.bind(this));
 	
+	/*
     this.graphic = new Gwt.Graphic.Svg.Canvas ();
     this.graphic.SetSize (this.GetWidth(), this.GetHeight ());
 	this.graphic.SetViewBox (0, 0, this.graphic.GetWidth(), this.graphic.GetHeight());
@@ -260,9 +261,12 @@ function test ()
 	this.arc1.SetFill ("White");
 	this.arc1.SetStroke ("Black");
 	this.arc1.SetStrokeWidth (1);
+	*/
 	
+	this.buttonoff = new Gwt.Gui.ButtonOnOff ();
+	this.buttonoff.SetPosition (25, 25);
 	
-    this.Add (this.file1);
+    this.Add (this.buttonoff);
 	
 	/*this.graphic.Add (this.rect1);
 	this.graphic.Add (this.circle1);

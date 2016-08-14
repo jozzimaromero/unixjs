@@ -37,8 +37,6 @@ Gwt.Graphic.Svg.Graphic.prototype.Add = function (element)
     this.Html.appendChild (element.Html);
 }
 
-
-
 Gwt.Graphic.Svg.Graphic.prototype.SetWidth = function (Width)
 {
     this.Width = Width;

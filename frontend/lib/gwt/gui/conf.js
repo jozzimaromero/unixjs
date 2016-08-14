@@ -202,6 +202,7 @@ Gwt.Gui.Contrib.Colors =
 	DarkSlateGray : [47,79,79,1],
 	Green: [0,255,0,1],
 	Black: [0,0,0,1],
+	Blue: [0,0,255,1],
 }
 
 //Gwt Border Styles

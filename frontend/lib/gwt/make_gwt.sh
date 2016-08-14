@@ -9,23 +9,6 @@ cat core/conf.js >> gwt.js
 cat core/request.js >> gwt.js
 
 
-
-#graphic
-cat graphic/conf.js >> gwt.js
-cat graphic/svg/conf.js >> gwt.js
-cat graphic/svg/graphic.js >> gwt.js
-cat graphic/svg/canvas.js >> gwt.js
-cat graphic/svg/rect.js >> gwt.js
-cat graphic/svg/circle.js >> gwt.js
-cat graphic/svg/ellipse.js >> gwt.js
-cat graphic/svg/line.js >> gwt.js
-cat graphic/svg/polygon.js >> gwt.js
-cat graphic/svg/polyline.js >> gwt.js
-cat graphic/svg/path.js >> gwt.js
-cat graphic/svg/arc.js >> gwt.js
-
-
-
 #gui
 cat gui/conf.js >> gwt.js
 cat gui/frame.js >> gwt.js
@@ -43,7 +26,25 @@ cat gui/vbox.js >> gwt.js
 cat gui/slider.js >> gwt.js
 cat gui/clock.js >> gwt.js
 cat gui/button_sv_up_dl.js >> gwt.js
+cat gui/button_on_off.js >> gwt.js
 #cat gui/date.js >> gwt.js
+
+
+
+#graphic
+cat graphic/conf.js >> gwt.js
+cat graphic/svg/conf.js >> gwt.js
+cat graphic/svg/graphic.js >> gwt.js
+cat graphic/svg/canvas.js >> gwt.js
+cat graphic/svg/rect.js >> gwt.js
+cat graphic/svg/circle.js >> gwt.js
+cat graphic/svg/ellipse.js >> gwt.js
+cat graphic/svg/line.js >> gwt.js
+cat graphic/svg/polygon.js >> gwt.js
+cat graphic/svg/polyline.js >> gwt.js
+cat graphic/svg/path.js >> gwt.js
+cat graphic/svg/arc.js >> gwt.js
+
 
 
 #compile and mimic
