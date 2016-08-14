@@ -92,7 +92,7 @@ static int answer_to_connection (void *cls, struct MHD_Connection *connection, c
 
 int main ()
 {
-    printf ("Runing unixjs web system...\n"
+    printf ("Runing frontend on http://127.0.0.1:8888\n"
         "Press enter key to terminate.\n"
     );
     struct MHD_Daemon *daemon;
