@@ -1,11 +1,8 @@
 #include <zdb/zdb.h>
 #include "database.h"
 
-static URL_T url;
-static ConnectionPool_T pool;
-
 //defined function to open and close pools
-int open_pool (struct http_request *req)
+int open_pool (void)
 {
     if (url == NULL)
     {
@@ -19,14 +16,15 @@ int open_pool (struct http_request *req)
         kore_log (LOG_INFO, "url opened yet");
     }
 
-    return (KORE_RESULT_OK);
+    return 0;
 }
 
-int close_pool (struct http_request *req)
+int close_pool (void)
 {
     if (url != NULL)
     {
         int conns =  ConnectionPool_reapConnections(pool);
+        kore_log (LOG_INFO, "connections closed: %d", conns);
         ConnectionPool_free (&pool);
         URL_free (&url);
     }
@@ -36,7 +34,7 @@ int close_pool (struct http_request *req)
     }
 
     
-    return (KORE_RESULT_OK);
+    return 0;
 }
 
 int test_pool (struct http_request *req)
@@ -77,3 +75,25 @@ int test_pool (struct http_request *req)
     return (KORE_RESULT_OK);
 }
 
+Connection_T get_connection ()
+{
+    Connection_T conn;
+
+    if (url != NULL)
+    {
+        conn = ConnectionPool_getConnection (pool);
+    }
+    else 
+    {
+        if (!open_pool ())
+        {
+            conn = ConnectionPool_getConnection (pool);
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+    
+    return conn;
+}
