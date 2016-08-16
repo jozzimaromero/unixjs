@@ -514,6 +514,21 @@ Gwt.Gui.Contrib.BackgroundPosition =
 	Bottom: "bottom",
 	Center: "center"
 }
+
+// Gwt OutLine
+Gwt.Gui.Contrib.OutLine =
+{
+	Dotted: "dotted",
+	Dashed: "dashed",
+	Solid: "solid",
+	Double: "double",
+	Groove: "groove",
+	Ridge: "ridge",
+	Inset: "inset",
+	Outset: "outset",
+	None: "none",
+	Hidden: "hidden"
+}
 //###########################################################################################################
 
 //##################################################################################################
@@ -559,6 +574,7 @@ Gwt.Gui.Frame = function ()
 	this.MinWidth = null;
 	this.Overflow = null;
 	this.Opacity = null;
+	this.OutLine = null;
 	this.Padding = null;
 	this.PaddingBottom = null;
 	this.PaddingLeft = null;
@@ -629,6 +645,8 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
 	this.MaxHeight = null;
 	this.MaxWidth = null;
 	this.Overflow = null;
+	this.Opacity = null;
+	this.OutLine = null;
 	this.Padding = null;
 	this.PaddingBottom = null;
 	this.PaddingLeft = null;
@@ -1111,6 +1129,17 @@ Gwt.Gui.Frame.prototype.SetExpand = function (Expand)
 Gwt.Gui.Frame.prototype.IsExpand = function ()
 {
 	return this.Expand;
+}
+
+Gwt.Gui.Frame.prototype.SetOutLine = function (OutLine)
+{
+	this.OutLine = OutLine;
+	this.Html.style.outline = this.OutLine;
+}
+
+Gwt.Gui.Frame.prototype.GetOutLine = function ()
+{
+	return this.OutLine;
 }
 //Ends Gwt::Gui::Frame Class
 //Class Gwt::Gui::Window
@@ -2460,6 +2489,7 @@ Gwt.Gui.ButtonOnOff = function ()
 	Gwt.Gui.Frame.call (this);
 	this.Graphic = null;
 	this.InitButtonOnOff ();
+	this.Status = 0;
 }
 
 Gwt.Gui.ButtonOnOff.prototype = new Gwt.Gui.Frame ();
@@ -2476,6 +2506,7 @@ Gwt.Gui.ButtonOnOff.prototype.InitButtonOnOff = function ()
 	this.SetClassName ("Gwt_Gui_Button_on_off");
 	this.SetSize (48,24);
 	this.SetBorder(1);
+	this.SetOutLine (Gwt.Gui.Contrib.OutLine.None);
 	var colorborder = new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.Azure);
 	colorborder.SetAlpha (0.5);
 	this.SetBorderColor(colorborder);
@@ -2498,13 +2529,30 @@ Gwt.Gui.ButtonOnOff.prototype.InitButtonOnOff = function ()
 	
 	this.Graphic.Add (this.Circle);
 	this.Add (this.Graphic);
-	
-	//this.Graphic.SetPosition(0,24);
+
 }
+
 Gwt.Gui.ButtonOnOff.prototype.Click = function ()
 {
-	this.Graphic.SetPosition(0,24);
+		
+	if (this.Status === 0)
+	{
+		this.Graphic.SetPosition (0,24);
+		var colorbackground = new Gwt.Gui.Contrib.Color (0,102,255);
+		colorbackground.SetAlpha (0.3);
+		this.SetBackgroundColor(colorbackground);
+		this.Status = 1;
+	}
+	else
+	{
+		this.Graphic.SetPosition (0,0);
+		var colorbackground = new Gwt.Gui.Contrib.Color (25,25,25);
+		colorbackground.SetAlpha (0.25);
+		this.SetBackgroundColor(colorbackground);
+		this.Status = 0;
+	}
 }
+
 
 //Ends Gwt::Gui::ButtonOnOff
 //##################################################################################################
