@@ -202,6 +202,7 @@ Gwt.Gui.Contrib.Colors =
 	DarkSlateGray : [47,79,79,1],
 	Green: [0,255,0,1],
 	Black: [0,0,0,1],
+	Blue: [0,0,255,1],
 }
 
 //Gwt Border Styles
@@ -407,6 +408,21 @@ Gwt.Gui.Contrib.BackgroundPosition =
 	Top: "top",
 	Bottom: "bottom",
 	Center: "center"
+}
+
+// Gwt OutLine
+Gwt.Gui.Contrib.OutLine =
+{
+	Dotted: "dotted",
+	Dashed: "dashed",
+	Solid: "solid",
+	Double: "double",
+	Groove: "groove",
+	Ridge: "ridge",
+	Inset: "inset",
+	Outset: "outset",
+	None: "none",
+	Hidden: "hidden"
 }
 //###########################################################################################################
 

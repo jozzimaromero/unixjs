@@ -103,822 +103,6 @@ Gwt.Core.Request.prototype.Ready = function ()
 }
 //End of Gwt::Core::Request
 //##########################################################
-//Gwt::Graphic
-//###########################################################################################################
-Gwt.Graphic = new Object ();
-//###########################################################################################################
-//End Gwt::Graphic::Svg
-//Gwt::Graphic::Svg
-//###########################################################################################################
-//environments constants
-Gwt.Graphic.Svg = new Object ();
-Gwt.Graphic.Svg.Contrib = new Object ();
-
-Gwt.Graphic.Svg.Contrib.AspectRatio =
-{
-    XMinYMin : "xMimYMin",
-    XMidYMid : "xMidYMid",
-    XMaxYMax : "xMaxYMax",
-    XMinYMid : "xMinYMid",
-    XMidYMin : "xMidYMin",
-    XMidYMax : "xMidYMax",
-    XMaxYMid : "xMaxYMid",
-    XMinYMax : "xMinYMax",
-    XMaxYMin : "xMaxYMin",
-}
-
-Gwt.Graphic.Svg.Contrib.ZoomAndPan =
-{
-    Magnify : "magnify",
-    Disable : "disable",
-}
-
-Gwt.Graphic.Svg.Contrib.StrokeLineCap =
-{
-    Butt : "butt",
-    Round : "round",
-    Square : "square",
-}
-//###########################################################################################################
-//Gwt::Graphic::Conf
-
-//##################################################################################################
-//Class Gwt::Graphics::Svg::Graphic
-Gwt.Graphic.Svg.Graphic = function ()
-{
-    this.Html = null;
-    this.Width = null;
-    this.Height = null;
-    this.Fill = null;
-    this.FillOpacity = null;
-    this.Stroke = null;
-    this.StrokeOpacity = null;
-    this.StrokeWidth = null;
-    this.StrokeLineCap = null;
-    this.StrokeDashArray = null;
-    
-    this.InitGraphic ();
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.InitGraphic = function ()
-{
-    this.Html = document.createElement ("svg");
-    
-    this.SetWidth (100);
-    this.SetHeight (100);
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.FinalizeGraphic = function ()
-{
-    this.Html = null;
-
-    this.Width = null;
-    this.Height = null;
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.Add = function (element)
-{
-    this.Html.appendChild (element.Html);
-}
-
-
-
-Gwt.Graphic.Svg.Graphic.prototype.SetWidth = function (Width)
-{
-    this.Width = Width;
-    this.Html.setAttribute ("width", this.Width+"px");
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.GetWidth = function ()
-{
-    return this.Width;
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetHeight = function (Height)
-{
-    this.Height = Height;
-    this.Html.setAttribute ("height", this.Height+"px");
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.GetHeight = function ()
-{
-    return this.Height;
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetSize = function (Width, Height)
-{
-    this.SetWidth (Width);
-    this.SetHeight (Height);
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetFill = function (Fill)
-{
-    this.Fill = Fill;
-    this.Html.setAttribute ("fill", this.Fill);
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetFillOpacity = function (FillOpacity)
-{
-    this.FillOpacity = FillOpacity;
-    this.Html.setAttribute ("fill-opacity", this.FillOpacity);
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetStroke = function (Stroke)
-{
-    this.Stroke = Stroke;
-    this.Html.setAttribute ("stroke", this.Stroke);
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetStrokeOpacity = function (StrokeOpacity)
-{
-    this.StrokeOpacity = StrokeOpacity;
-    this.Html.setAttribute ("stroke-opacity", this.StrokeOpacity);
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetStrokeWidth = function (StrokeWidth)
-{
-    this.StrokeWidth = StrokeWidth;
-    this.Html.setAttribute ("stroke-width", this.StrokeWidth+"px");
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetStrokeLineCap = function (StrokeLineCap)
-{
-    this.StrokeLineCap = StrokeLineCap;
-    this.Html.setAttribute ("stroke-linecap", this.StrokeLineCap);
-}
-
-Gwt.Graphic.Svg.Graphic.prototype.SetStrokeDashArray = function (StrokeDashArray)
-{
-    this.StrokeDashArray = StrokeDashArray;
-    this.Html.setAttribute ("stroke-dasharray", this.StrokeDashArray);
-}
-//##################################################################################################
-//End Gwt::Graphic::Svg::Graphic
-
-//##################################################################################################
-//Class Gwt::Graphics::Svg::Canvas
-Gwt.Graphic.Svg.Canvas = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.X = null;
-    this.Y = null;
-    this.ViewBoxMinX = null;
-    this.ViewBoxMinY = null;
-    this.ViewBoxWidth = null;
-    this.ViewBoxHeight = null;
-    this.PreserveAspectRatio = null;
-    this.ZoomAndPan = null;
-    this.Xmlns = null;
-    this.XmlnsXlink = null;
-    this.XmlSpace = null;
-    
-    this.InitCanvas ();
-}
-
-Gwt.Graphic.Svg.Canvas.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Canvas.prototype.constructor = Gwt.Graphic.Svg.Canvas;
-
-Gwt.Graphic.Svg.Canvas.prototype.InitCanvas = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "svg");
-    this.SetX (0);
-    this.SetY (0);
-    this.SetWidth (100);
-    this.SetHeight (100);
-    this.SetViewBox (0, 0, this.GetWidth(), this.GetHeight());
-    this.SetPreserveAspectRatio (Gwt.Graphic.Svg.Contrib.AspectRatio.XMaxYMax);
-    this.SetZoomAndPan (Gwt.Graphic.Svg.Contrib.ZoomAndPan.Disable);
-    this.SetXmlns ("http://www.w3.org/2000/svg", "http://www.w3.org/1999/xlink", "preserve");
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.FinalizeCanvas = function ()
-{
-    this.FinalizeSvgGraphic ();
-    this.X = null;
-    this.Y = null;
-    this.ViewBoxMinX = null;
-    this.ViewBoxMinY = null;
-    this.ViewBoxWidth = null;
-    this.ViewBoxHeight = null;
-    this.PreserveAspectRatio = null;
-    this.ZoomAndPan = null;
-    this.Xmlns = null;
-    this.XmlnsXlink = null;
-    this.XmlSpace = null;
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.SetX = function (X)
-{
-    this.X = X;
-    this.Html.setAttribute ("x", this.X+"px");
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.GetX = function ()
-{
-    return this.X;
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.SetY = function (Y)
-{
-    this.Y = Y;
-    this.Html.setAttribute ("Y", this.Y+"px");
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.GetY = function ()
-{
-    return this.Y;
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.SetViewBox = function (Minx, Miny, Width, Height)
-{
-    this.ViewBoxMinX = Minx;
-    this.ViewBoxMinY = Miny;
-    this.ViewBoxWidth = Width;
-    this.ViewBoxHeight = Height;
-    
-    this.Html.setAttribute ("viewBox", this.ViewBoxMinX+", "+this.ViewBoxMinX+", "+this.ViewBoxWidth+", "+this.ViewBoxHeight);
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.SetPreserveAspectRatio = function (AspectRatio)
-{
-    this.PreserveAspectRatio = AspectRatio;
-    
-    this.Html.setAttribute ("preserveAspectRatio", this.PreserveAspectRatio);
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.SetZoomAndPan = function (ZoomAndPan)
-{
-    this.ZoomAndPan = ZoomAndPan;
-    
-    this.Html.setAttribute ("zoomAndPan", this.ZoomAndPan);
-}
-
-Gwt.Graphic.Svg.Canvas.prototype.SetXmlns = function (Xmlns, XmlnsXlink, XmlSpace)
-{
-    this.Xmlns  = Xmlns;
-    this.XmlnsXlink = XmlnsXlink;
-    this.XmlSpace = XmlSpace;
-    
-    this.Html.setAttribute ("xmlns", this.Xmlns);
-    this.Html.setAttribute ("xmlns:xlink", this.XmlnsXlink);
-    this.Html.setAttribute ("xml:space", this.XmlSpace);
-}
-//Ends Gwt::Graphic::Svg::Canvas 
-//##################################################################################################
-
-//##################################################################################################
-//Class Gwt::Graphics::Svg::Rect
-Gwt.Graphic.Svg.Rect = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.X = null;
-    this.Y = null;
-    this.Rx = null;
-    this.Ry = null;
- 
-    this.InitRect ();
-}
-
-Gwt.Graphic.Svg.Rect.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Rect.prototype.constructor = Gwt.Graphic.Svg.Rect;
-
-Gwt.Graphic.Svg.Rect.prototype.InitRect = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "rect");
-    this.SetX (0);
-    this.SetY (0);
-    this.SetSize (100, 100);
-}
-
-Gwt.Graphic.Svg.Rect.prototype.SetX = function (X)
-{
-    this.X = X;
-    this.Html.setAttribute ("x", this.X+"px");
-}
-
-Gwt.Graphic.Svg.Rect.prototype.GetX = function ()
-{
-    return this.X;
-}
-
-Gwt.Graphic.Svg.Rect.prototype.SetY = function (Y)
-{
-    this.Y = Y;
-    this.Html.setAttribute ("Y", this.Y+"px");
-}
-
-Gwt.Graphic.Svg.Rect.prototype.GetY = function ()
-{
-    return this.Y;
-}
-
-Gwt.Graphic.Svg.Rect.prototype.SetRx = function (Rx)
-{
-    this.Rx = Rx;
-    this.Html.setAttribute ("rx", this.Rx+"px");
-}
-
-Gwt.Graphic.Svg.Rect.prototype.GetRx = function ()
-{
-    return this.Rx;
-}
-
-Gwt.Graphic.Svg.Rect.prototype.SetRy = function (Ry)
-{
-    this.Ry = Ry;
-    this.Html.setAttribute ("ry", this.Ry+"px");
-}
-
-Gwt.Graphic.Svg.Rect.prototype.GetRy = function ()
-{
-    return this.Ry;
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Rect
-
-//##################################################################################################
-//Class Gwt::Graphics::Circle
-Gwt.Graphic.Svg.Circle = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.Cx = null;
-    this.Cy = null;
-    this.R = null;
- 
-    this.InitCircle ();
-}
-
-Gwt.Graphic.Svg.Circle.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Circle.prototype.constructor = Gwt.Graphic.Svg.Circle;
-
-Gwt.Graphic.Svg.Circle.prototype.InitCircle = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "circle");
-    this.SetCx (0);
-    this.SetCy (0);
-    this.SetR (10);
-}
-
-Gwt.Graphic.Svg.Circle.prototype.SetCx = function (Cx)
-{
-    this.Cx = Cx;
-    this.Html.setAttribute ("cx", this.Cx+"px");
-}
-
-Gwt.Graphic.Svg.Circle.prototype.GetCx = function ()
-{
-    return this.Cx;
-}
-
-Gwt.Graphic.Svg.Circle.prototype.SetCy = function (Cy)
-{
-    this.Cy = Cy;
-    this.Html.setAttribute ("cy", this.Cy+"px");
-}
-
-Gwt.Graphic.Svg.Circle.prototype.GetCy = function ()
-{
-    return this.Cy;
-}
-
-Gwt.Graphic.Svg.Circle.prototype.SetR = function (R)
-{
-    this.R = R;
-    this.Html.setAttribute ("r", this.R+"px");
-}
-
-Gwt.Graphic.Svg.Circle.prototype.GetR = function ()
-{
-    return this.R;
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Circle
-
-//##################################################################################################
-//Class Gwt::Graphics::Svg::Ellipse
-Gwt.Graphic.Svg.Ellipse = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.Cx = null;
-    this.Cy = null;
-    this.Rx = null;
-    this.Ry = null;
- 
-    this.InitEllipse ();
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Ellipse.prototype.constructor = Gwt.Graphic.Svg.Ellipse;
-
-Gwt.Graphic.Svg.Ellipse.prototype.InitEllipse = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "ellipse");
-    this.SetCx (0);
-    this.SetCy (0);
-    this.SetRx (0);
-    this.SetRy (0);
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.SetCx = function (Cx)
-{
-    this.Cx = Cx;
-    this.Html.setAttribute ("cx", this.Cx+"px");
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.GetCx = function ()
-{
-    return this.Cx;
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.SetCy = function (Cy)
-{
-    this.Cy = Cy;
-    this.Html.setAttribute ("cy", this.Cy+"px");
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.GetCy = function ()
-{
-    return this.Cy;
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.SetRx = function (Rx)
-{
-    this.Rx = Rx;
-    this.Html.setAttribute ("rx", this.Rx+"px");
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.GetRx = function ()
-{
-    return this.Rx;
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.SetRy = function (Ry)
-{
-    this.Ry = Ry;
-    this.Html.setAttribute ("ry", this.Ry+"px");
-}
-
-Gwt.Graphic.Svg.Ellipse.prototype.GetRy = function ()
-{
-    return this.Ry;
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Ellipse
-
-//##################################################################################################
-//Class Gwt::Graphics::Line
-Gwt.Graphic.Svg.Line = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.X1 = null;
-    this.Y1 = null;
-    this.X2 = null;
-    this.Y2 = null;
- 
-    this.InitLine ();
-}
-
-Gwt.Graphic.Svg.Line.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Line.prototype.constructor = Gwt.Graphic.Svg.Line;
-
-Gwt.Graphic.Svg.Line.prototype.InitLine = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "line");
-    this.SetP1 (0, 0);
-    this.SetP2 (10, 10);
-}
-
-Gwt.Graphic.Svg.Line.prototype.SetX1 = function (X1)
-{
-    this.X1 = X1;
-    this.Html.setAttribute ("x1", this.X1+"px");
-}
-
-Gwt.Graphic.Svg.Line.prototype.GetX1 = function ()
-{
-    return this.X1;
-}
-
-Gwt.Graphic.Svg.Line.prototype.SetY1 = function (Y1)
-{
-    this.Y1 = Y1;
-    this.Html.setAttribute ("y1", this.Y1+"px");
-}
-
-Gwt.Graphic.Svg.Line.prototype.GetY1 = function ()
-{
-    return this.Y1;
-}
-
-Gwt.Graphic.Svg.Line.prototype.SetX2 = function (X2)
-{
-    this.X2 = X2;
-    this.Html.setAttribute ("x2", this.X2+"px");
-}
-
-Gwt.Graphic.Svg.Line.prototype.GetX2 = function ()
-{
-    return this.X2;
-}
-
-Gwt.Graphic.Svg.Line.prototype.SetY2 = function (Y2)
-{
-    this.Y2 = Y2;
-    this.Html.setAttribute ("y2", this.Y2+"px");
-}
-
-Gwt.Graphic.Svg.Line.prototype.GetY2 = function ()
-{
-    return this.Y2;
-}
-
-Gwt.Graphic.Svg.Line.prototype.SetP1 = function (P1X, P1Y)
-{
-    this.SetX1 (P1X);
-    this.SetY1 (P1Y);
-}
-
-Gwt.Graphic.Svg.Line.prototype.SetP2 = function (P2X, P2Y)
-{
-    this.SetX2 (P2X);
-    this.SetY2 (P2Y);
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Line
-
-//##################################################################################################
-//Class Gwt::Graphics::Svg::Polygon
-Gwt.Graphic.Svg.Polygon = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.Points = null;
-    this.FillRule = null;
- 
-    this.InitPolygon ();
-}
-
-Gwt.Graphic.Svg.Polygon.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Polygon.prototype.constructor = Gwt.Graphic.Svg.Polygon;
-
-Gwt.Graphic.Svg.Polygon.prototype.InitPolygon = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "polygon");
-}
-
-Gwt.Graphic.Svg.Polygon.prototype.SetPoints = function (Points)
-{
-    this.Points = Points;
-    this.Html.setAttribute ("points", this.Points);
-}
-
-Gwt.Graphic.Svg.Polygon.prototype.GetPoints = function ()
-{
-    return this.Points;
-}
-
-Gwt.Graphic.Svg.Polygon.prototype.SetFillRule = function (FillRule)
-{
-    this.FillRule = FillRule;
-    this.Html.setAttribute ("fill-rule", this.FillRule);
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Polygon
-
-//##################################################################################################
-//Class Gwt::Graphics::Svg::Polyline
-Gwt.Graphic.Svg.Polyline = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.Points = null;
- 
-    this.InitPolygon ();
-}
-
-Gwt.Graphic.Svg.Polyline.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Polyline.prototype.constructor = Gwt.Graphic.Svg.Polyline;
-
-Gwt.Graphic.Svg.Polyline.prototype.InitPolyline = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "polyline");
-}
-
-Gwt.Graphic.Svg.Polyline.prototype.SetPoints = function (Points)
-{
-    this.Points = Points;
-    this.Html.setAttribute ("points", this.Points);
-}
-
-Gwt.Graphic.Svg.Polyline.prototype.GetPoints = function ()
-{
-    return this.Points;
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Polyline
-
-//##################################################################################################
-//Class Gwt::Graphics::Svg::Path
-Gwt.Graphic.Svg.Path = function ()
-{
-    Gwt.Graphic.Svg.Graphic.call (this);
-    this.D = null;
-    this.M = null;
-    this.L = null;
-    this.H = null;
-    this.V = null;
-    this.C = null;
-    this.S = null;
-    this.Q = null;
-    this.T = null;
-    this.A = null;
-    this.Z = null;
- 
-    this.InitPath ();
-}
-
-Gwt.Graphic.Svg.Path.prototype = new Gwt.Graphic.Svg.Graphic ();
-Gwt.Graphic.Svg.Path.prototype.constructor = Gwt.Graphic.Svg.Path;
-
-Gwt.Graphic.Svg.Path.prototype.InitPath = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "path");
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetD = function (D)
-{
-    this.D = D;
-    this.Html.setAttribute ("d", this.D);
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetD = function ()
-{
-    return this.D;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetM = function (M)
-{
-    this.M = "M"+M;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetM = function ()
-{
-    return this.M;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetL = function (L)
-{
-    this.L = "L"+L;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetL = function ()
-{
-    return this.L;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetH = function (H)
-{
-    this.H = "H"+H;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetH = function ()
-{
-    return this.H;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetV = function (V)
-{
-    this.V = "V"+V;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetV = function ()
-{
-    return this.V;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetC = function (C)
-{
-    this.C = "C"+C;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetC = function ()
-{
-    return this.C;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetS = function (S)
-{
-    this.S = "S"+S;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetS = function ()
-{
-    return this.S;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetQ = function (Q)
-{
-    this.Q = "Q"+Q;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetQ = function ()
-{
-    return this.Q;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetT = function (T)
-{
-    this.T = "T"+T;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetT = function ()
-{
-    return this.T;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetA = function (A)
-{
-    this.A = "A"+A;
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetA = function ()
-{
-    return this.A;
-}
-
-Gwt.Graphic.Svg.Path.prototype.SetZ = function ()
-{
-    this.Z = "Z";
-}
-
-Gwt.Graphic.Svg.Path.prototype.UnsetZ = function ()
-{
-    this.A = "";
-}
-
-Gwt.Graphic.Svg.Path.prototype.GetZ = function ()
-{
-    return this.Z;
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Path
-
-//##################################################################################################
-//Class Gwt::Graphics::Arc
-Gwt.Graphic.Svg.Arc = function ()
-{
-    Gwt.Graphic.Svg.Path.call (this);
-    this.X1 = null;
-    this.Y1 = null;
-    this.X2 = null;
-    this.Y2 = null;
-    this.CenterX = null;
-    this.CenterY = null;
-    this.Radius = null;
-    this.InitArc ();
-}
-
-Gwt.Graphic.Svg.Arc.prototype = new Gwt.Graphic.Svg.Path ();
-Gwt.Graphic.Svg.Arc.prototype.constructor = Gwt.Graphic.Svg.Arc;
-
-Gwt.Graphic.Svg.Arc.prototype.InitArc = function ()
-{
-    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "path");
-}
-
-Gwt.Graphic.Svg.Arc.prototype.PolarToCartesian = function (centerX, centerY, angleInDegrees)
-{
-    var angleInRadians = (angleInDegrees-90) * (Math.PI / 180.0);
-
-    return {
-        x: (centerX + (this.Radius * Math.cos(angleInRadians))),
-        y: (centerY + (this.Radius * Math.sin(angleInRadians)))
-    };
-}
-
-Gwt.Graphic.Svg.Arc.prototype.DescribeArc = function (X, Y, Radius, StartAngle, EndAngle)
-{
-    this.CenterX = X;
-    this.CenterY = Y;
-    this.Radius = Radius;
-    
-    var start = this.PolarToCartesian(X, Y, EndAngle);
-    this.X1 = start.x;
-    this.Y1 = start.y;
-    
-    var end = this.PolarToCartesian(X, Y, StartAngle);
-    this.X2 = end.x;
-    this.Y2 = end.y;
-
-    var arcSweep = EndAngle - StartAngle <= 180 ? "0" : "1";
-    
-    this.SetM ([this.X1, this.Y1].join (" "));
-    this.SetA ([this.Radius, this.Radius, 0, arcSweep, 0, this.X2, this.Y2].join (" "));
-    this.SetL ([this.CenterX, this.CenterY].join (" "));
-    this.SetZ ();
-    this.SetD ([this.GetM (), this.GetA (), this.GetL (), this.GetZ()]. join (" "));
-}
-//##########################################################################################################
-//Gwt::Graphic::Svg::Arc
-
 //#####################################################################################################
 //Gwt::Gui
 //environments constants
@@ -1123,6 +307,7 @@ Gwt.Gui.Contrib.Colors =
 	DarkSlateGray : [47,79,79,1],
 	Green: [0,255,0,1],
 	Black: [0,0,0,1],
+	Blue: [0,0,255,1],
 }
 
 //Gwt Border Styles
@@ -1329,6 +514,21 @@ Gwt.Gui.Contrib.BackgroundPosition =
 	Bottom: "bottom",
 	Center: "center"
 }
+
+// Gwt OutLine
+Gwt.Gui.Contrib.OutLine =
+{
+	Dotted: "dotted",
+	Dashed: "dashed",
+	Solid: "solid",
+	Double: "double",
+	Groove: "groove",
+	Ridge: "ridge",
+	Inset: "inset",
+	Outset: "outset",
+	None: "none",
+	Hidden: "hidden"
+}
 //###########################################################################################################
 
 //##################################################################################################
@@ -1374,6 +574,7 @@ Gwt.Gui.Frame = function ()
 	this.MinWidth = null;
 	this.Overflow = null;
 	this.Opacity = null;
+	this.OutLine = null;
 	this.Padding = null;
 	this.PaddingBottom = null;
 	this.PaddingLeft = null;
@@ -1444,6 +645,8 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
 	this.MaxHeight = null;
 	this.MaxWidth = null;
 	this.Overflow = null;
+	this.Opacity = null;
+	this.OutLine = null;
 	this.Padding = null;
 	this.PaddingBottom = null;
 	this.PaddingLeft = null;
@@ -1926,6 +1129,17 @@ Gwt.Gui.Frame.prototype.SetExpand = function (Expand)
 Gwt.Gui.Frame.prototype.IsExpand = function ()
 {
 	return this.Expand;
+}
+
+Gwt.Gui.Frame.prototype.SetOutLine = function (OutLine)
+{
+	this.OutLine = OutLine;
+	this.Html.style.outline = this.OutLine;
+}
+
+Gwt.Gui.Frame.prototype.GetOutLine = function ()
+{
+	return this.OutLine;
 }
 //Ends Gwt::Gui::Frame Class
 //Class Gwt::Gui::Window
@@ -3267,4 +2481,894 @@ Gwt.Gui.ButtonSvUpDl.prototype.set_update = function (enable_disable)
 }
 //Ends Gwt::Gui::Button_sv_up_dl
 //##################################################################################################
+
+//##################################################################################################
+//Class Gwt::Gui::Button_on_off
+Gwt.Gui.ButtonOnOff = function ()
+{
+	Gwt.Gui.Frame.call (this);
+	this.Graphic = null;
+	this.InitButtonOnOff ();
+	this.Status = 0;
+}
+
+Gwt.Gui.ButtonOnOff.prototype = new Gwt.Gui.Frame ();
+Gwt.Gui.ButtonOnOff.prototype.constructor = Gwt.Gui.ButtonOnOff;
+
+Gwt.Gui.ButtonOnOff.prototype.FinalizeButtonOnOff = function ()
+{
+	this.Graphic = null;
+	this.FinalizeFrame ();
+}
+
+Gwt.Gui.ButtonOnOff.prototype.InitButtonOnOff = function ()
+{
+	this.SetClassName ("Gwt_Gui_Button_on_off");
+	this.SetSize (48,24);
+	this.SetBorder(1);
+	this.SetOutLine (Gwt.Gui.Contrib.OutLine.None);
+	var colorborder = new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.Azure);
+	colorborder.SetAlpha (0.5);
+	this.SetBorderColor(colorborder);
+	var colorbackground = new Gwt.Gui.Contrib.Color (25,25,25);
+	colorbackground.SetAlpha (0.25);
+	this.SetBackgroundColor(colorbackground);
+	this.SetBorderStyle(Gwt.Gui.Contrib.BorderStyle.Solid);
+	this.SetBorderRadius(24);
+	
+	this.Graphic = new Gwt.Graphic.Svg.Canvas ();
+    this.Graphic.SetSize (24,24);
+	this.Graphic.SetViewBox (0, 0, this.Graphic.GetWidth(), this.Graphic.GetHeight());
+		
+	this.Circle = new Gwt.Graphic.Svg.Circle ();
+	this.Circle.SetFill ("Azure");
+	this.Circle.SetCx (12);
+	this.Circle.SetCy (12);
+	
+	this.AddEvent (Gwt.Gui.Event.Mouse.Click, this.Click.bind(this));
+	
+	this.Graphic.Add (this.Circle);
+	this.Add (this.Graphic);
+
+}
+
+Gwt.Gui.ButtonOnOff.prototype.Click = function ()
+{
+		
+	if (this.Status === 0)
+	{
+		this.Graphic.SetPosition (0,24);
+		var colorbackground = new Gwt.Gui.Contrib.Color (0,102,255);
+		colorbackground.SetAlpha (0.3);
+		this.SetBackgroundColor(colorbackground);
+		this.Status = 1;
+	}
+	else
+	{
+		this.Graphic.SetPosition (0,0);
+		var colorbackground = new Gwt.Gui.Contrib.Color (25,25,25);
+		colorbackground.SetAlpha (0.25);
+		this.SetBackgroundColor(colorbackground);
+		this.Status = 0;
+	}
+}
+
+
+//Ends Gwt::Gui::ButtonOnOff
+//##################################################################################################
+//Gwt::Graphic
+//###########################################################################################################
+Gwt.Graphic = new Object ();
+//###########################################################################################################
+//End Gwt::Graphic::Svg
+//Gwt::Graphic::Svg
+//###########################################################################################################
+//environments constants
+Gwt.Graphic.Svg = new Object ();
+Gwt.Graphic.Svg.Contrib = new Object ();
+
+Gwt.Graphic.Svg.Contrib.AspectRatio =
+{
+    XMinYMin : "xMimYMin",
+    XMidYMid : "xMidYMid",
+    XMaxYMax : "xMaxYMax",
+    XMinYMid : "xMinYMid",
+    XMidYMin : "xMidYMin",
+    XMidYMax : "xMidYMax",
+    XMaxYMid : "xMaxYMid",
+    XMinYMax : "xMinYMax",
+    XMaxYMin : "xMaxYMin",
+}
+
+Gwt.Graphic.Svg.Contrib.ZoomAndPan =
+{
+    Magnify : "magnify",
+    Disable : "disable",
+}
+
+Gwt.Graphic.Svg.Contrib.StrokeLineCap =
+{
+    Butt : "butt",
+    Round : "round",
+    Square : "square",
+}
+//###########################################################################################################
+//Gwt::Graphic::Conf
+
+//##################################################################################################
+//Class Gwt::Graphics::Svg::Graphic
+Gwt.Graphic.Svg.Graphic = function ()
+{
+    this.Html = null;
+    this.Width = null;
+    this.Height = null;
+    this.Fill = null;
+    this.FillOpacity = null;
+    this.Stroke = null;
+    this.StrokeOpacity = null;
+    this.StrokeWidth = null;
+    this.StrokeLineCap = null;
+    this.StrokeDashArray = null;
+    
+    this.InitGraphic ();
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.InitGraphic = function ()
+{
+    this.Html = document.createElement ("svg");
+    
+    this.SetWidth (100);
+    this.SetHeight (100);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.FinalizeGraphic = function ()
+{
+    this.Html = null;
+
+    this.Width = null;
+    this.Height = null;
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.Add = function (element)
+{
+    this.Html.appendChild (element.Html);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetWidth = function (Width)
+{
+    this.Width = Width;
+    this.Html.setAttribute ("width", this.Width+"px");
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.GetWidth = function ()
+{
+    return this.Width;
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetHeight = function (Height)
+{
+    this.Height = Height;
+    this.Html.setAttribute ("height", this.Height+"px");
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.GetHeight = function ()
+{
+    return this.Height;
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetSize = function (Width, Height)
+{
+    this.SetWidth (Width);
+    this.SetHeight (Height);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetFill = function (Fill)
+{
+    this.Fill = Fill;
+    this.Html.setAttribute ("fill", this.Fill);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetFillOpacity = function (FillOpacity)
+{
+    this.FillOpacity = FillOpacity;
+    this.Html.setAttribute ("fill-opacity", this.FillOpacity);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetStroke = function (Stroke)
+{
+    this.Stroke = Stroke;
+    this.Html.setAttribute ("stroke", this.Stroke);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetStrokeOpacity = function (StrokeOpacity)
+{
+    this.StrokeOpacity = StrokeOpacity;
+    this.Html.setAttribute ("stroke-opacity", this.StrokeOpacity);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetStrokeWidth = function (StrokeWidth)
+{
+    this.StrokeWidth = StrokeWidth;
+    this.Html.setAttribute ("stroke-width", this.StrokeWidth+"px");
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetStrokeLineCap = function (StrokeLineCap)
+{
+    this.StrokeLineCap = StrokeLineCap;
+    this.Html.setAttribute ("stroke-linecap", this.StrokeLineCap);
+}
+
+Gwt.Graphic.Svg.Graphic.prototype.SetStrokeDashArray = function (StrokeDashArray)
+{
+    this.StrokeDashArray = StrokeDashArray;
+    this.Html.setAttribute ("stroke-dasharray", this.StrokeDashArray);
+}
+//##################################################################################################
+//End Gwt::Graphic::Svg::Graphic
+
+//##################################################################################################
+//Class Gwt::Graphics::Svg::Canvas
+Gwt.Graphic.Svg.Canvas = function ()
+{
+    Gwt.Gui.Frame.call (this);
+    this.X = null;
+    this.Y = null;
+    this.ViewBoxMinX = null;
+    this.ViewBoxMinY = null;
+    this.ViewBoxWidth = null;
+    this.ViewBoxHeight = null;
+    this.PreserveAspectRatio = null;
+    this.ZoomAndPan = null;
+    this.Xmlns = null;
+    this.XmlnsXlink = null;
+    this.XmlSpace = null;
+    
+    
+    this.InitCanvas ();
+}
+
+Gwt.Graphic.Svg.Canvas.prototype = new Gwt.Gui.Frame ();
+Gwt.Graphic.Svg.Canvas.prototype.constructor = Gwt.Graphic.Svg.Canvas;
+
+Gwt.Graphic.Svg.Canvas.prototype.InitCanvas = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "svg");
+    this.SetX (0);
+    this.SetY (0);
+    this.SetWidth (100);
+    this.SetHeight (100);
+    this.SetViewBox (0, 0, this.GetWidth(), this.GetHeight());
+    this.SetPreserveAspectRatio (Gwt.Graphic.Svg.Contrib.AspectRatio.XMaxYMax);
+    this.SetZoomAndPan (Gwt.Graphic.Svg.Contrib.ZoomAndPan.Disable);
+    this.SetXmlns ("http://www.w3.org/2000/svg", "http://www.w3.org/1999/xlink", "preserve");
+    this.SetPositionType (Gwt.Gui.Contrib.PositionType.Relative);
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.FinalizeCanvas = function ()
+{
+    this.FinalizeSvgGraphic ();
+    this.X = null;
+    this.Y = null;
+    this.ViewBoxMinX = null;
+    this.ViewBoxMinY = null;
+    this.ViewBoxWidth = null;
+    this.ViewBoxHeight = null;
+    this.PreserveAspectRatio = null;
+    this.ZoomAndPan = null;
+    this.Xmlns = null;
+    this.XmlnsXlink = null;
+    this.XmlSpace = null;
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.SetX = function (X)
+{
+    this.X = X;
+    this.Html.setAttribute ("x", this.X+"px");
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.GetX = function ()
+{
+    return this.X;
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.SetY = function (Y)
+{
+    this.Y = Y;
+    this.Html.setAttribute ("Y", this.Y+"px");
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.GetY = function ()
+{
+    return this.Y;
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.SetViewBox = function (Minx, Miny, Width, Height)
+{
+    this.ViewBoxMinX = Minx;
+    this.ViewBoxMinY = Miny;
+    this.ViewBoxWidth = Width;
+    this.ViewBoxHeight = Height;
+    
+    this.Html.setAttribute ("viewBox", this.ViewBoxMinX+", "+this.ViewBoxMinX+", "+this.ViewBoxWidth+", "+this.ViewBoxHeight);
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.SetPreserveAspectRatio = function (AspectRatio)
+{
+    this.PreserveAspectRatio = AspectRatio;
+    
+    this.Html.setAttribute ("preserveAspectRatio", this.PreserveAspectRatio);
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.SetZoomAndPan = function (ZoomAndPan)
+{
+    this.ZoomAndPan = ZoomAndPan;
+    
+    this.Html.setAttribute ("zoomAndPan", this.ZoomAndPan);
+}
+
+Gwt.Graphic.Svg.Canvas.prototype.SetXmlns = function (Xmlns, XmlnsXlink, XmlSpace)
+{
+    this.Xmlns  = Xmlns;
+    this.XmlnsXlink = XmlnsXlink;
+    this.XmlSpace = XmlSpace;
+    
+    this.Html.setAttribute ("xmlns", this.Xmlns);
+    this.Html.setAttribute ("xmlns:xlink", this.XmlnsXlink);
+    this.Html.setAttribute ("xml:space", this.XmlSpace);
+}
+//Ends Gwt::Graphic::Svg::Canvas 
+//##################################################################################################
+
+//##################################################################################################
+//Class Gwt::Graphics::Svg::Rect
+Gwt.Graphic.Svg.Rect = function ()
+{
+    Gwt.Graphic.Svg.Graphic.call (this);
+    this.X = null;
+    this.Y = null;
+    this.Rx = null;
+    this.Ry = null;
+ 
+    this.InitRect ();
+}
+
+Gwt.Graphic.Svg.Rect.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Rect.prototype.constructor = Gwt.Graphic.Svg.Rect;
+
+Gwt.Graphic.Svg.Rect.prototype.InitRect = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "rect");
+    this.SetX (0);
+    this.SetY (0);
+    this.SetSize (100, 100);
+}
+
+Gwt.Graphic.Svg.Rect.prototype.SetX = function (X)
+{
+    this.X = X;
+    this.Html.setAttribute ("x", this.X+"px");
+}
+
+Gwt.Graphic.Svg.Rect.prototype.GetX = function ()
+{
+    return this.X;
+}
+
+Gwt.Graphic.Svg.Rect.prototype.SetY = function (Y)
+{
+    this.Y = Y;
+    this.Html.setAttribute ("Y", this.Y+"px");
+}
+
+Gwt.Graphic.Svg.Rect.prototype.GetY = function ()
+{
+    return this.Y;
+}
+
+Gwt.Graphic.Svg.Rect.prototype.SetRx = function (Rx)
+{
+    this.Rx = Rx;
+    this.Html.setAttribute ("rx", this.Rx+"px");
+}
+
+Gwt.Graphic.Svg.Rect.prototype.GetRx = function ()
+{
+    return this.Rx;
+}
+
+Gwt.Graphic.Svg.Rect.prototype.SetRy = function (Ry)
+{
+    this.Ry = Ry;
+    this.Html.setAttribute ("ry", this.Ry+"px");
+}
+
+Gwt.Graphic.Svg.Rect.prototype.GetRy = function ()
+{
+    return this.Ry;
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Rect
+
+//##################################################################################################
+//Class Gwt::Graphics::Circle
+Gwt.Graphic.Svg.Circle = function ()
+{
+    Gwt.Graphic.Svg.Graphic.call (this);
+    this.Cx = null;
+    this.Cy = null;
+    this.R = null;
+ 
+    this.InitCircle ();
+}
+
+Gwt.Graphic.Svg.Circle.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Circle.prototype.constructor = Gwt.Graphic.Svg.Circle;
+
+Gwt.Graphic.Svg.Circle.prototype.InitCircle = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "circle");
+    this.SetCx (0);
+    this.SetCy (0);
+    this.SetR (10);
+}
+
+Gwt.Graphic.Svg.Circle.prototype.SetCx = function (Cx)
+{
+    this.Cx = Cx;
+    this.Html.setAttribute ("cx", this.Cx+"px");
+}
+
+Gwt.Graphic.Svg.Circle.prototype.GetCx = function ()
+{
+    return this.Cx;
+}
+
+Gwt.Graphic.Svg.Circle.prototype.SetCy = function (Cy)
+{
+    this.Cy = Cy;
+    this.Html.setAttribute ("cy", this.Cy+"px");
+}
+
+Gwt.Graphic.Svg.Circle.prototype.GetCy = function ()
+{
+    return this.Cy;
+}
+
+Gwt.Graphic.Svg.Circle.prototype.SetR = function (R)
+{
+    this.R = R;
+    this.Html.setAttribute ("r", this.R+"px");
+}
+
+Gwt.Graphic.Svg.Circle.prototype.GetR = function ()
+{
+    return this.R;
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Circle
+
+//##################################################################################################
+//Class Gwt::Graphics::Svg::Ellipse
+Gwt.Graphic.Svg.Ellipse = function ()
+{
+    Gwt.Graphic.Svg.Graphic.call (this);
+    this.Cx = null;
+    this.Cy = null;
+    this.Rx = null;
+    this.Ry = null;
+ 
+    this.InitEllipse ();
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Ellipse.prototype.constructor = Gwt.Graphic.Svg.Ellipse;
+
+Gwt.Graphic.Svg.Ellipse.prototype.InitEllipse = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "ellipse");
+    this.SetCx (0);
+    this.SetCy (0);
+    this.SetRx (0);
+    this.SetRy (0);
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.SetCx = function (Cx)
+{
+    this.Cx = Cx;
+    this.Html.setAttribute ("cx", this.Cx+"px");
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.GetCx = function ()
+{
+    return this.Cx;
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.SetCy = function (Cy)
+{
+    this.Cy = Cy;
+    this.Html.setAttribute ("cy", this.Cy+"px");
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.GetCy = function ()
+{
+    return this.Cy;
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.SetRx = function (Rx)
+{
+    this.Rx = Rx;
+    this.Html.setAttribute ("rx", this.Rx+"px");
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.GetRx = function ()
+{
+    return this.Rx;
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.SetRy = function (Ry)
+{
+    this.Ry = Ry;
+    this.Html.setAttribute ("ry", this.Ry+"px");
+}
+
+Gwt.Graphic.Svg.Ellipse.prototype.GetRy = function ()
+{
+    return this.Ry;
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Ellipse
+
+//##################################################################################################
+//Class Gwt::Graphics::Line
+Gwt.Graphic.Svg.Line = function ()
+{
+    Gwt.Graphic.Svg.Graphic.call (this);
+    this.X1 = null;
+    this.Y1 = null;
+    this.X2 = null;
+    this.Y2 = null;
+ 
+    this.InitLine ();
+}
+
+Gwt.Graphic.Svg.Line.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Line.prototype.constructor = Gwt.Graphic.Svg.Line;
+
+Gwt.Graphic.Svg.Line.prototype.InitLine = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "line");
+    this.SetP1 (0, 0);
+    this.SetP2 (10, 10);
+}
+
+Gwt.Graphic.Svg.Line.prototype.SetX1 = function (X1)
+{
+    this.X1 = X1;
+    this.Html.setAttribute ("x1", this.X1+"px");
+}
+
+Gwt.Graphic.Svg.Line.prototype.GetX1 = function ()
+{
+    return this.X1;
+}
+
+Gwt.Graphic.Svg.Line.prototype.SetY1 = function (Y1)
+{
+    this.Y1 = Y1;
+    this.Html.setAttribute ("y1", this.Y1+"px");
+}
+
+Gwt.Graphic.Svg.Line.prototype.GetY1 = function ()
+{
+    return this.Y1;
+}
+
+Gwt.Graphic.Svg.Line.prototype.SetX2 = function (X2)
+{
+    this.X2 = X2;
+    this.Html.setAttribute ("x2", this.X2+"px");
+}
+
+Gwt.Graphic.Svg.Line.prototype.GetX2 = function ()
+{
+    return this.X2;
+}
+
+Gwt.Graphic.Svg.Line.prototype.SetY2 = function (Y2)
+{
+    this.Y2 = Y2;
+    this.Html.setAttribute ("y2", this.Y2+"px");
+}
+
+Gwt.Graphic.Svg.Line.prototype.GetY2 = function ()
+{
+    return this.Y2;
+}
+
+Gwt.Graphic.Svg.Line.prototype.SetP1 = function (P1X, P1Y)
+{
+    this.SetX1 (P1X);
+    this.SetY1 (P1Y);
+}
+
+Gwt.Graphic.Svg.Line.prototype.SetP2 = function (P2X, P2Y)
+{
+    this.SetX2 (P2X);
+    this.SetY2 (P2Y);
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Line
+
+//##################################################################################################
+//Class Gwt::Graphics::Svg::Polygon
+Gwt.Graphic.Svg.Polygon = function ()
+{
+    Gwt.Graphic.Svg.Graphic.call (this);
+    this.Points = null;
+    this.FillRule = null;
+ 
+    this.InitPolygon ();
+}
+
+Gwt.Graphic.Svg.Polygon.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Polygon.prototype.constructor = Gwt.Graphic.Svg.Polygon;
+
+Gwt.Graphic.Svg.Polygon.prototype.InitPolygon = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "polygon");
+}
+
+Gwt.Graphic.Svg.Polygon.prototype.SetPoints = function (Points)
+{
+    this.Points = Points;
+    this.Html.setAttribute ("points", this.Points);
+}
+
+Gwt.Graphic.Svg.Polygon.prototype.GetPoints = function ()
+{
+    return this.Points;
+}
+
+Gwt.Graphic.Svg.Polygon.prototype.SetFillRule = function (FillRule)
+{
+    this.FillRule = FillRule;
+    this.Html.setAttribute ("fill-rule", this.FillRule);
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Polygon
+
+//##################################################################################################
+//Class Gwt::Graphics::Svg::Polyline
+Gwt.Graphic.Svg.Polyline = function ()
+{
+    Gwt.Graphic.Svg.Graphic.call (this);
+    this.Points = null;
+ 
+    this.InitPolygon ();
+}
+
+Gwt.Graphic.Svg.Polyline.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Polyline.prototype.constructor = Gwt.Graphic.Svg.Polyline;
+
+Gwt.Graphic.Svg.Polyline.prototype.InitPolyline = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "polyline");
+}
+
+Gwt.Graphic.Svg.Polyline.prototype.SetPoints = function (Points)
+{
+    this.Points = Points;
+    this.Html.setAttribute ("points", this.Points);
+}
+
+Gwt.Graphic.Svg.Polyline.prototype.GetPoints = function ()
+{
+    return this.Points;
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Polyline
+
+//##################################################################################################
+//Class Gwt::Graphics::Svg::Path
+Gwt.Graphic.Svg.Path = function ()
+{
+    Gwt.Graphic.Svg.Graphic.call (this);
+    this.D = null;
+    this.M = null;
+    this.L = null;
+    this.H = null;
+    this.V = null;
+    this.C = null;
+    this.S = null;
+    this.Q = null;
+    this.T = null;
+    this.A = null;
+    this.Z = null;
+ 
+    this.InitPath ();
+}
+
+Gwt.Graphic.Svg.Path.prototype = new Gwt.Graphic.Svg.Graphic ();
+Gwt.Graphic.Svg.Path.prototype.constructor = Gwt.Graphic.Svg.Path;
+
+Gwt.Graphic.Svg.Path.prototype.InitPath = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "path");
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetD = function (D)
+{
+    this.D = D;
+    this.Html.setAttribute ("d", this.D);
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetD = function ()
+{
+    return this.D;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetM = function (M)
+{
+    this.M = "M"+M;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetM = function ()
+{
+    return this.M;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetL = function (L)
+{
+    this.L = "L"+L;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetL = function ()
+{
+    return this.L;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetH = function (H)
+{
+    this.H = "H"+H;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetH = function ()
+{
+    return this.H;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetV = function (V)
+{
+    this.V = "V"+V;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetV = function ()
+{
+    return this.V;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetC = function (C)
+{
+    this.C = "C"+C;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetC = function ()
+{
+    return this.C;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetS = function (S)
+{
+    this.S = "S"+S;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetS = function ()
+{
+    return this.S;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetQ = function (Q)
+{
+    this.Q = "Q"+Q;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetQ = function ()
+{
+    return this.Q;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetT = function (T)
+{
+    this.T = "T"+T;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetT = function ()
+{
+    return this.T;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetA = function (A)
+{
+    this.A = "A"+A;
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetA = function ()
+{
+    return this.A;
+}
+
+Gwt.Graphic.Svg.Path.prototype.SetZ = function ()
+{
+    this.Z = "Z";
+}
+
+Gwt.Graphic.Svg.Path.prototype.UnsetZ = function ()
+{
+    this.A = "";
+}
+
+Gwt.Graphic.Svg.Path.prototype.GetZ = function ()
+{
+    return this.Z;
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Path
+
+//##################################################################################################
+//Class Gwt::Graphics::Arc
+Gwt.Graphic.Svg.Arc = function ()
+{
+    Gwt.Graphic.Svg.Path.call (this);
+    this.X1 = null;
+    this.Y1 = null;
+    this.X2 = null;
+    this.Y2 = null;
+    this.CenterX = null;
+    this.CenterY = null;
+    this.Radius = null;
+    this.InitArc ();
+}
+
+Gwt.Graphic.Svg.Arc.prototype = new Gwt.Graphic.Svg.Path ();
+Gwt.Graphic.Svg.Arc.prototype.constructor = Gwt.Graphic.Svg.Arc;
+
+Gwt.Graphic.Svg.Arc.prototype.InitArc = function ()
+{
+    this.Html = document.createElementNS ("http://www.w3.org/2000/svg", "path");
+}
+
+Gwt.Graphic.Svg.Arc.prototype.PolarToCartesian = function (centerX, centerY, angleInDegrees)
+{
+    var angleInRadians = (angleInDegrees-90) * (Math.PI / 180.0);
+
+    return {
+        x: (centerX + (this.Radius * Math.cos(angleInRadians))),
+        y: (centerY + (this.Radius * Math.sin(angleInRadians)))
+    };
+}
+
+Gwt.Graphic.Svg.Arc.prototype.DescribeArc = function (X, Y, Radius, StartAngle, EndAngle)
+{
+    this.CenterX = X;
+    this.CenterY = Y;
+    this.Radius = Radius;
+    
+    var start = this.PolarToCartesian(X, Y, EndAngle);
+    this.X1 = start.x;
+    this.Y1 = start.y;
+    
+    var end = this.PolarToCartesian(X, Y, StartAngle);
+    this.X2 = end.x;
+    this.Y2 = end.y;
+
+    var arcSweep = EndAngle - StartAngle <= 180 ? "0" : "1";
+    
+    this.SetM ([this.X1, this.Y1].join (" "));
+    this.SetA ([this.Radius, this.Radius, 0, arcSweep, 0, this.X2, this.Y2].join (" "));
+    this.SetL ([this.CenterX, this.CenterY].join (" "));
+    this.SetZ ();
+    this.SetD ([this.GetM (), this.GetA (), this.GetL (), this.GetZ()]. join (" "));
+}
+//##########################################################################################################
+//Gwt::Graphic::Svg::Arc
 
