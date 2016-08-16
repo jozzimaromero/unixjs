@@ -409,5 +409,20 @@ Gwt.Gui.Contrib.BackgroundPosition =
 	Bottom: "bottom",
 	Center: "center"
 }
+
+// Gwt OutLine
+Gwt.Gui.Contrib.OutLine =
+{
+	Dotted: "dotted",
+	Dashed: "dashed",
+	Solid: "solid",
+	Double: "double",
+	Groove: "groove",
+	Ridge: "ridge",
+	Inset: "inset",
+	Outset: "outset",
+	None: "none",
+	Hidden: "hidden"
+}
 //###########################################################################################################
 

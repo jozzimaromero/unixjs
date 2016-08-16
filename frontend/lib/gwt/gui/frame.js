@@ -41,6 +41,7 @@ Gwt.Gui.Frame = function ()
 	this.MinWidth = null;
 	this.Overflow = null;
 	this.Opacity = null;
+	this.OutLine = null;
 	this.Padding = null;
 	this.PaddingBottom = null;
 	this.PaddingLeft = null;
@@ -111,6 +112,8 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
 	this.MaxHeight = null;
 	this.MaxWidth = null;
 	this.Overflow = null;
+	this.Opacity = null;
+	this.OutLine = null;
 	this.Padding = null;
 	this.PaddingBottom = null;
 	this.PaddingLeft = null;
@@ -593,5 +596,16 @@ Gwt.Gui.Frame.prototype.SetExpand = function (Expand)
 Gwt.Gui.Frame.prototype.IsExpand = function ()
 {
 	return this.Expand;
+}
+
+Gwt.Gui.Frame.prototype.SetOutLine = function (OutLine)
+{
+	this.OutLine = OutLine;
+	this.Html.style.outline = this.OutLine;
+}
+
+Gwt.Gui.Frame.prototype.GetOutLine = function ()
+{
+	return this.OutLine;
 }
 //Ends Gwt::Gui::Frame Class
