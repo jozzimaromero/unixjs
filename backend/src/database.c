@@ -1,6 +1,9 @@
 #include <zdb/zdb.h>
 #include "database.h"
 
+static URL_T url;
+static ConnectionPool_T pool;
+
 //defined function to open and close pools
 int open_pool (void)
 {

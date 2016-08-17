@@ -4,17 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
-
-struct variables_row {
-    char name[32];
-    unsigned long long val_int;
-    char val_text[256];
-};
-
-struct media_row {
-    char name[32];
-    char type[8];
-};
+#include <json-c/json.h>
 
 //upload_file
 int upload_file (struct http_request *req)
@@ -29,9 +19,9 @@ int upload_file (struct http_request *req)
     char                *subpath = NULL;
 	char                *type = NULL;
 	unsigned int        i = 0;
-	struct variables_row variable;
-	struct media_row    media;
-    
+    variables_row       variable;
+    media_row           media;
+	    
     if (req->method != HTTP_METHOD_POST)
     {
         msg = "method is not post";
@@ -151,7 +141,7 @@ int upload_file (struct http_request *req)
                 PreparedStatement_execute (p);
             }
             
-            char *ptr = &media.name;
+            char *ptr = media.name;
             sprintf (ptr, "%lld", variable.val_int);
             strcpy (media.type, type);
             
@@ -175,11 +165,14 @@ int upload_file (struct http_request *req)
     {
        kore_log (LOG_INFO, "imposible to make connection, first open pool");
     }
+
+    Connection_close (conn);
     
+    char full_name[32];
     strcat (path, subpath);
-    strcat (path, strcat (media.name, ext));
-    
-    kore_log (LOG_INFO, "el path es: %s", path);
+    strcpy (full_name, media.name);
+    strcat (full_name, ext);
+    strcat (path, full_name);
     
     fd = open (path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
     
@@ -231,9 +224,6 @@ int upload_file (struct http_request *req)
     }
     
     ret = KORE_RESULT_OK;
-    msg = "upload file!";
-    http_response (req, 200, msg,  strlen(msg));
- 
     cleanup:
         if (close (fd) == -1)
         {
@@ -249,6 +239,19 @@ int upload_file (struct http_request *req)
             
             ret = KORE_RESULT_OK;
         }
+    
+    json_object *json_msg = NULL;
+    json_msg = json_object_new_object ();
+    char *json_media_name = NULL;
+    char *json_media_type = NULL;
+    json_media_name = media.name;
+    json_media_type = media.type;
+    
+    json_object_object_add (json_msg, "name", json_object_new_string (json_media_name));
+    json_object_object_add (json_msg, "type", json_object_new_string (json_media_type));
+    
+    msg = json_object_to_json_string(json_msg);
+    http_response (req, 200, msg, strlen(msg));
     
     return (KORE_RESULT_OK);
 }

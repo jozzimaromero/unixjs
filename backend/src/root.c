@@ -16,7 +16,6 @@ int home (struct http_request *req)
 int save_user (struct http_request *req)
 {
     char *data;
-    //struct kore_buf *buf;
 
     if (req->method != HTTP_METHOD_POST)
     {
@@ -26,11 +25,8 @@ int save_user (struct http_request *req)
     
     http_populate_post (req);
     
-    //buf = kore_buf_alloc(128);
-    
     if (http_argument_get_string (req, "data", &data))
     {
-        //kore_buf_appendf(buf, "$name$", data);
         kore_log (LOG_INFO, "Data received!");
     }
     else
@@ -38,7 +34,6 @@ int save_user (struct http_request *req)
         kore_log (LOG_INFO, "Data not received!");
     }
     
-    //kore_buf_free(buf);
     return (KORE_RESULT_OK);
 }
 

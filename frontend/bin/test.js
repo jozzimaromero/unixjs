@@ -46,6 +46,7 @@ function test ()
 	this.buttonoff = new Gwt.Gui.ButtonOnOff ();
 	this.buttonoff.SetPosition (25, 25);
 	
+	this.Add (this.file1);
     this.Add (this.buttonoff);
 	
 	/*this.graphic.Add (this.rect1);
@@ -61,7 +62,8 @@ test.prototype.constructor = test;
 
 test.prototype.send = function ()
 {
-	new Gwt.Core.Request ("/backend/upload_file/", this.response.bind (this), this.file1.GetData ());
+	var data = {"name": "jose", "lastname": "cáceres", "document": "1098671330", "document_type": "c.c", "password": "1234"};
+	new Gwt.Core.Request ("/backend/auth/create_user/", this.response.bind (this), data);
 }
 
 test.prototype.response = function (data)

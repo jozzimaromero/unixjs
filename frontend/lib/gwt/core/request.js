@@ -76,7 +76,7 @@ Gwt.Core.Request.prototype.Ready = function ()
 {
 	if (this.XHR.readyState == 4 && this.XHR.status == 200)
 	{
-		this.Func(this.XHR.response);
+		this.Func(JSON.parse(this.XHR.response));
 	}
 }
 //End of Gwt::Core::Request
