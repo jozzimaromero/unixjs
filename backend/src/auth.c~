@@ -1,0 +1,383 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <openssl/sha.h>
+#include <math.h>
+#include <time.h>
+#include <json-c/json.h>
+#include <kore/kore.h>
+#include <kore/http.h>
+
+#include "auth.h"
+#include "database.h"
+
+//session validate
+int v_session_validate (struct http_request *req, char *data)
+{
+	kore_log(LOG_NOTICE, "v_session_validate: %s", data);
+
+	if (strcmp(data, "test123") == 0)
+	{
+		return (KORE_RESULT_OK);
+	}
+
+	return (KORE_RESULT_ERROR);
+}
+
+
+
+//insert user
+int insert_user (struct http_request *req)
+{
+    auth_user_row       new_user;
+    char                *data = NULL;
+    const char          *msg = NULL;
+    json_object         *json_msg = NULL;
+    
+    json_msg = json_object_new_object ();
+    
+    if (req->method != HTTP_METHOD_POST)
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("method is not post"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+    
+    http_populate_post (req);
+    
+    if (http_argument_get_string (req, "data", &data) == KORE_RESULT_ERROR)
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("argument key is not data"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+  
+    json_object *jobj = json_tokener_parse(data);
+    
+    int save = 1;
+    json_object_object_foreach (jobj, key, val)
+    {
+        if (strcmp (key, "document") == 0)
+        {
+             strcpy (new_user.document, json_object_get_string (val));
+        }
+        else if (strcmp (key, "document_type") == 0)
+        {
+             strcpy (new_user.document_type, json_object_get_string (val));
+        }
+        else if (strcmp (key, "password") == 0)
+        {
+            const char *p = encrypt_password (json_object_get_string (val));
+            if (p != NULL)
+            {
+                strcpy (new_user.password, p);
+            }
+            else 
+            {
+                save = 0;
+            }
+                
+        }
+        else 
+        {
+            save = 0;
+        }
+    }
+    
+    if (!save)
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("error keys not found or password key length is not 4"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+    
+    Connection_T conn = get_connection ();
+    
+    if (Connection_ping (conn))
+    {   
+        PreparedStatement_T p;
+        TRY
+        {   
+            p = Connection_prepareStatement (conn, "INSERT INTO auth_user (document, document_type, password) VALUES (?, ?, ?);");
+            PreparedStatement_setString (p, 1, new_user.document);
+            PreparedStatement_setString (p, 2, new_user.document_type);
+            PreparedStatement_setString (p, 3, new_user.password);
+            PreparedStatement_execute (p);
+        }
+        CATCH (SQLException)
+        {
+            json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+            json_object_object_add (json_msg, "message", json_object_new_string (Exception_frame.message));
+            msg = json_object_to_json_string(json_msg);
+            http_response (req, 200, msg,  strlen(msg));
+            return (KORE_RESULT_OK);
+        }
+        FINALLY
+        {
+            Connection_close (conn);
+        }
+        END_TRY;
+    }
+    else
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("error not database connection"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+
+    Connection_close (conn);
+    
+    json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_OK));
+    msg = json_object_to_json_string(json_msg);
+    http_response (req, 200, msg,  strlen(msg));
+    return (KORE_RESULT_OK);
+}
+
+
+
+//update user
+int update_user (struct http_request *req)
+{
+    char            *data = NULL;
+    const char      *msg = NULL;
+    json_object     *json_msg = NULL;
+
+    json_msg = json_object_new_object ();
+    
+    if (req->method != HTTP_METHOD_POST)
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("method is not post"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+    
+    http_populate_post (req);
+    
+    if (http_argument_get_string (req, "data", &data) == KORE_RESULT_ERROR)
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("argument key is not data"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+    
+    json_object *jobj = json_tokener_parse(data);
+    
+    auth_user_row       select_user;
+    auth_user_row       update_user;
+    int                 update = 1;
+    int                 update_document = 0;
+    int                 update_document_type = 0;
+    int                 update_password = 0;
+    
+    json_object_object_foreach (jobj, key, val)
+    {
+        if (strcmp (key, "document") == 0)
+        {
+            strcpy (select_user.document, json_object_get_string (val));    
+        }
+        else if (strcmp (key, "document_type") == 0)
+        {
+            strcpy (select_user.document_type, json_object_get_string (val));
+        }
+        else if (strcmp (key, "new_document") == 0)
+        {
+            strcpy (update_user.document_type, json_object_get_string (val));
+            update_document = 1;
+        }
+        else if (strcmp (key, "new_document_type") == 0)
+        {
+            strcpy (update_user.document_type, json_object_get_string (val));
+            update_document_type = 1;
+        }
+        else if (strcmp (key, "new_password") == 0)
+        {
+            const char *p = encrypt_password (json_object_get_string (val));
+            if (p != NULL)
+            {
+                strcpy (update_user.password, p);
+                update_password = 1;
+            }
+            else 
+            {
+                json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+                json_object_object_add (json_msg, "message", json_object_new_string ("error update user: new_password length is not 4"));
+                msg = json_object_to_json_string(json_msg);
+                http_response (req, 200, msg,  strlen(msg));
+                return (KORE_RESULT_OK);
+            }
+        }
+        else
+        {
+            update = 0;
+        }
+    }
+    
+    if (!update)
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("error update user need key: document, document_type and new document or new document_type or new_password"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+    
+    Connection_T conn = get_connection ();
+    
+    if (Connection_ping (conn))
+    {   
+        PreparedStatement_T p;
+        TRY
+        {   
+            Res
+        }
+        CATCH (SQLException)
+        {
+            json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+            json_object_object_add (json_msg, "message", json_object_new_string (Exception_frame.message));
+            msg = json_object_to_json_string(json_msg);
+            http_response (req, 200, msg,  strlen(msg));
+            return (KORE_RESULT_OK);
+        }
+        FINALLY
+        {
+            Connection_close (conn);
+        }
+        END_TRY;
+    }
+    else
+    {
+        json_object_object_add (json_msg, "result", json_object_new_int (KORE_RESULT_ERROR));
+        json_object_object_add (json_msg, "message", json_object_new_string ("error not database connection"));
+        msg = json_object_to_json_string(json_msg);
+        http_response (req, 200, msg,  strlen(msg));
+        return (KORE_RESULT_OK);
+    }
+
+    Connection_close (conn);
+    
+    return (KORE_RESULT_OK);
+    return (KORE_RESULT_OK);
+}
+
+
+
+//delete user
+int delete_user (struct http_request *req)
+{
+    return (KORE_RESULT_OK);
+}
+
+
+
+//select group
+int select_group (struct http_request *req)
+{
+    return (KORE_RESULT_OK);
+}
+
+
+
+//insert group
+int insert_group (struct http_request *req)
+{
+    return (KORE_RESULT_OK);
+}
+
+
+
+//update goup
+int update_group (struct http_request *req)
+{
+    return (KORE_RESULT_OK);
+}
+
+
+
+//delete group
+int delete_group (struct http_request *req)
+{
+    return (KORE_RESULT_OK);
+}
+
+
+
+//contrib
+const char *encrypt_password (const char *password_)
+{
+    char *p = NULL;
+    
+    if (strlen(password_) != 4)
+    {
+        return p;
+    }
+    
+    time_t seconds;
+	time (&seconds);	
+	srand ((unsigned int) seconds);
+	
+	char *alpha = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	int index = rand () % 62;
+	
+	char character[1];
+	character[0] = alpha[index];
+	
+	unsigned char hash[SHA256_DIGEST_LENGTH];
+
+    const unsigned char *p_character = NULL;
+    p_character = (const unsigned char*)character;    
+    
+	SHA256 (p_character, strlen(character), hash);
+	
+	char digest_random[SHA256_DIGEST_LENGTH*2];
+	
+	for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+        sprintf (digest_random + (i*2), "%02x",(int)hash[i]);
+    }
+    
+    char salt[16];
+    snprintf (salt, sizeof(salt)+1, digest_random);
+    
+    salt[3] = character[0];
+    char password[5];
+    strcpy (password, password_);
+    password[4] = character[0];
+    
+    const unsigned char *p_password = (const unsigned char*)password;
+    SHA256 (p_password, strlen(password), hash);
+    
+    char digest_password[SHA256_DIGEST_LENGTH*2];
+
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+        sprintf (digest_password + (i*2), "%02x",(int)hash[i]);
+    }
+    
+    char password_salt[128];
+    strcpy (password_salt, "sha256$");
+    strcat (password_salt, salt);
+    strcat (password_salt, "$");
+    strcat (password_salt, digest_password);
+    	
+	
+	p = password_salt;
+	return p;
+}
+
+int check_password (const char *password_)
+{
+    return 0;
+}

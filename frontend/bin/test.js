@@ -62,8 +62,8 @@ test.prototype.constructor = test;
 
 test.prototype.send = function ()
 {
-	var data = {"name": "jose", "lastname": "cáceres", "document": "1098671330", "document_type": "c.c", "password": "1234"};
-	new Gwt.Core.Request ("/backend/auth/create_user/", this.response.bind (this), data);
+	var data = {"name": "example"};
+	new Gwt.Core.Request ("/backend/auth/delete_group/", this.response.bind (this), data);
 }
 
 test.prototype.response = function (data)

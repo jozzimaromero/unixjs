@@ -13,14 +13,14 @@ int upload_file (struct http_request *req)
     struct http_file    *file;
     u_int8_t            buf[BUFSIZ];
     ssize_t             ret, written;
-    const char          *msg;
-    char                path[64];
+    const char          *msg=NULL;
+    char                path[64]="";
     char                ext[8] = ".";
     char                *subpath = NULL;
 	char                *type = NULL;
 	unsigned int        i = 0;
-    variables_row       variable;
-    media_row           media;
+    variable_row        variable = new_variable_row ();
+    media_row           media = new_media_row ();
 	    
     if (req->method != HTTP_METHOD_POST)
     {
@@ -119,14 +119,14 @@ int upload_file (struct http_request *req)
     {   
         TRY
         {   
-            ResultSet_T r = Connection_executeQuery (conn, "SELECT name, val_int FROM variables WHERE name='%s';", type);
+            ResultSet_T r = Connection_executeQuery (conn, "SELECT name, val_int FROM variable WHERE name='%s';", type);
             PreparedStatement_T p;
             if (ResultSet_next (r))
             {
                 strcpy (variable.name, type);
                 variable.val_int = ResultSet_getLLongByName (r, "val_int");
                 variable.val_int += 1;
-                p = Connection_prepareStatement (conn, "UPDATE variables SET val_int=? WHERE name=?");
+                p = Connection_prepareStatement (conn, "UPDATE variable SET val_int=? WHERE name=?");
                 PreparedStatement_setLLong (p, 1, variable.val_int);
                 PreparedStatement_setString (p, 2, variable.name);
                 PreparedStatement_execute (p);
@@ -135,7 +135,7 @@ int upload_file (struct http_request *req)
             {
                 strcpy (variable.name, type);
                 variable.val_int = 0;
-                p = Connection_prepareStatement (conn, "INSERT INTO variables (name, val_int) VALUES (?, ?)");
+                p = Connection_prepareStatement (conn, "INSERT INTO variable (name, val_int) VALUES (?, ?)");
                 PreparedStatement_setString (p, 1, variable.name);
                 PreparedStatement_setLLong (p, 2, variable.val_int);
                 PreparedStatement_execute (p);
@@ -149,26 +149,31 @@ int upload_file (struct http_request *req)
             PreparedStatement_setString (p, 1, media.name);
             PreparedStatement_setString (p, 2, media.type);
             PreparedStatement_execute (p);
+            
+            Connection_close (conn);
         }
         CATCH (SQLException)
         {
             const char *message = Exception_frame.message;
             kore_log (LOG_INFO, "error sql, %s", message);
+            
+            Connection_close (conn);
+            return (KORE_RESULT_OK);
         }
         FINALLY
         {
-            Connection_close (conn);
         }
         END_TRY;
     }
     else
     {
        kore_log (LOG_INFO, "imposible to make connection, first open pool");
+       return (KORE_RESULT_OK);
     }
 
-    Connection_close (conn);
     
-    char full_name[32];
+    
+    char full_name[32] = "";
     strcat (path, subpath);
     strcpy (full_name, media.name);
     strcat (full_name, ext);
@@ -205,7 +210,7 @@ int upload_file (struct http_request *req)
         
         if (written == -1) 
         {
-            char tmpmsg [128];
+            char tmpmsg [128] = "";
 		    strcpy (tmpmsg, "write(%s): ");
 		    strcat (tmpmsg, file->filename);
 		    strcat (tmpmsg, errno_s);

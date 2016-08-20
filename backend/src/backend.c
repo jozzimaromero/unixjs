@@ -1,4 +1,4 @@
 #include "database.h"
 #include "uploadfile.h"
-#include "session.h"
+#include "auth.h"
 #include "root.h"
