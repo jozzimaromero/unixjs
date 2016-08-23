@@ -1,5 +1,7 @@
 #include "database.h"
 #include "uploadfile.h"
+#include "media_row.h"
+#include "variable_row.h"
 
 #include <fcntl.h>
 #include <unistd.h>
