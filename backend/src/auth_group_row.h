@@ -5,9 +5,16 @@
 
 typedef struct {
     char name[32];
-} auth_group_row;
+} auth_group_row_t;
 
-auth_group_row new_auth_group_row (void);
-json_object* auth_group_row_json (auth_group_row*);
+
+typedef struct {
+    auth_group_row_t old_group;
+    auth_group_row_t new_group;
+} auth_group_update_t;
+
+auth_group_row_t new_auth_group_row (char *);
+auth_group_row_t new_void_auth_group_row (void);
+json_object* auth_group_row_to_json (auth_group_row_t*);
 
 #endif

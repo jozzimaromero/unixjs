@@ -95,6 +95,8 @@ int verify_request (struct http_request *req, char **data)
         json_object_object_add (json_msg, "message", json_object_new_string ("method is not post"));
         msg = json_object_to_json_string(json_msg);
         http_response (req, 200, msg,  strlen(msg));
+        
+        json_object_put (json_msg);
         return (KORE_RESULT_ERROR);
     }
     
@@ -106,9 +108,49 @@ int verify_request (struct http_request *req, char **data)
         json_object_object_add (json_msg, "message", json_object_new_string ("argument key is not data"));
         msg = json_object_to_json_string(json_msg);
         http_response (req, 200, msg,  strlen(msg));
+        
+        json_object_put (json_msg);
         return (KORE_RESULT_ERROR);
     }
     
+    json_object_put (json_msg);
     return (KORE_RESULT_OK);
+}
+
+
+
+int http_response_json_msg (struct http_request *req, int result, const char *msg)
+{
+    const char *resp = NULL;
+    json_object         *json_msg = NULL;
+    json_msg  = json_object_new_object ();
+    
+    json_object_object_add (json_msg, "result", json_object_new_int (result));
+    json_object_object_add (json_msg, "data", json_object_new_string (msg));
+    resp = json_object_to_json_string(json_msg);
+    http_response (req, 200, resp, strlen(resp));
+    
+    json_object_put (json_msg);
+    json_msg = NULL;
+    
+    return KORE_RESULT_OK;
+}
+
+
+int http_response_json_array (struct http_request *req, int result, json_object *array)
+{
+    const char *resp = NULL;
+    json_object         *json_msg = NULL;
+    json_msg  = json_object_new_object ();
+    
+    json_object_object_add (json_msg, "result", json_object_new_int (result));
+    json_object_object_add (json_msg, "data", array);
+    resp = json_object_to_json_string(json_msg);
+    http_response (req, 200, resp, strlen(resp));
+    
+    json_object_put (json_msg);
+    json_msg = NULL;
+    
+    return KORE_RESULT_OK;
 }
 
