@@ -154,3 +154,13 @@ int http_response_json_array (struct http_request *req, int result, json_object 
     return KORE_RESULT_OK;
 }
 
+
+sql_state new_sql_state (int result, const char *msg)
+{
+    sql_state r;
+    r.result = result;
+    r.msg = msg;
+    
+    return r;
+}
+

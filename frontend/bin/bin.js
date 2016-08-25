@@ -282,8 +282,8 @@ test.prototype.constructor = test;
 
 test.prototype.send = function ()
 {
-	var data = [{"name":"root"}, {"name":"financial"}];
-	new Gwt.Core.Request ("/backend/delete_group/", this.response.bind (this), data);
+	var data = [{"document": "1098671330", "document_tsype": "c.c"}];
+	new Gwt.Core.Request ("/backend/insert_user/", this.response.bind (this), data);
 }
 
 test.prototype.response = function (data)
