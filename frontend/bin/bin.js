@@ -282,8 +282,9 @@ test.prototype.constructor = test;
 
 test.prototype.send = function ()
 {
-	var data = [{"document": "1098671330", "document_tsype": "c.c"}];
-	new Gwt.Core.Request ("/backend/insert_user/", this.response.bind (this), data);
+	var data = {"user_info": {"document": "1098671330", "document_type": "c.c"}, "userfile": this.file1.GetData ()};
+	new Gwt.Core.Request ("/backend/upload_file/", this.response.bind (this), data);
+	
 }
 
 test.prototype.response = function (data)

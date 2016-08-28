@@ -16,6 +16,8 @@
 //home
 int home (struct http_request *req)
 {
+    sql_state r = init_database_system ();
+    kore_log (LOG_INFO, "%s", r.msg);
     const char *msg = "hello world!";
     http_response (req, 200, msg,  strlen(msg));
     return (KORE_RESULT_OK);

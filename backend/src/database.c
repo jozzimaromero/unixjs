@@ -1,3 +1,5 @@
+#include <kore/kore.h>
+#include <kore/http.h>
 #include <zdb/zdb.h>
 #include <json-c/json.h>
 #include "database.h"
@@ -64,3 +66,93 @@ Connection_T get_connection ()
     return conn;
 }
 
+
+sql_state init_database_system ()
+{
+    const char *init_database_statements[] = {   
+        "CREATE TABLE variable"
+        "("
+            "name VARCHAR(32) UNIQUE NOT NULL,"
+            "val_int BIGINT,"
+            "val_text VARCHAR(256)"
+        ")",
+        
+        "CREATE TABLE media"
+        "("
+            "id BIGSERIAL PRIMARY KEY,"
+            "name VARCHAR(32) NOT NULL,"
+            "type VARCHAR(8) NOT NULL,"
+            "UNIQUE (name, type)"
+        ")",
+        
+        "CREATE TABLE auth_user"
+        "("
+            "id BIGSERIAL PRIMARY KEY,"
+            "document VARCHAR(16) NOT NULL,"
+            "document_type VARCHAR(8) NOT NULL,"
+            "UNIQUE (document, document_type)"
+        ")",
+        "INSERT INTO auth_user (document, document_type) VALUES ('root', 'xxxxxxxx')",
+        
+        "CREATE TABLE auth_password"
+        "("
+            "user_id BIGINT NOT NULL REFERENCES auth_user (id) ON UPDATE CASCADE ON DELETE CASCADE,"
+            "password VARCHAR(256) NOT NULL"
+        ")",
+        
+        "CREATE TABLE auth_group"
+        "("
+            "id BIGSERIAL PRIMARY KEY,"
+            "name VARCHAR(32) UNIQUE NOT NULL"
+        ")",
+        "INSERT INTO auth_group (name) VALUES ('root')",
+        "INSERT INTO auth_group (name) VALUES ('user')",
+        
+        "CREATE TABLE auth_user_group"
+        "("
+            "user_id BIGINT NOT NULL REFERENCES auth_user (id) ON UPDATE CASCADE ON DELETE CASCADE,"
+            "group_id BIGINT NOT NULL REFERENCES auth_group (id) ON UPDATE CASCADE ON DELETE CASCADE,"
+            "UNIQUE (user_id, group_id)"
+        ")",
+    };
+    
+    int length = sizeof (init_database_statements) / sizeof (init_database_statements[0]);
+    
+    sql_state s;
+    
+    Connection_T conn = get_connection ();
+        
+    if (!Connection_ping (conn))
+    {   
+        s = new_sql_state (KORE_RESULT_ERROR, "error not database connection");
+        return s;
+    }
+    
+    TRY
+    {   
+        Connection_beginTransaction (conn);
+        
+        PreparedStatement_T p;
+        
+        for (int i = 0; i < length; i++)
+        {
+            p = Connection_prepareStatement (conn, "%s", init_database_statements[i]);
+            PreparedStatement_execute (p);
+        }
+
+        Connection_commit (conn);    
+        s = new_sql_state (KORE_RESULT_OK, "database initialized");
+    }
+    CATCH (SQLException)
+    {    
+        Connection_rollback (conn);
+        s = new_sql_state (KORE_RESULT_ERROR, Exception_frame.message);
+    }
+    FINALLY
+    {
+    }
+    END_TRY;
+    
+    Connection_close (conn);
+    return s;
+}

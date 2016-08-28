@@ -66,10 +66,8 @@ const char *encrypt_password (const char *password_)
     strcat (password_salt, salt);
     strcat (password_salt, "$");
     strcat (password_salt, digest_password);
-    	
-	
+    
 	p = password_salt;
-	//kore_log (LOG_INFO, "%s", p);
 	return p;
 }
 

@@ -4,8 +4,8 @@
 typedef struct {
     char name[32];
     char type[8];
-} media_row;
+} media_row_t;
 
-media_row   new_media_row (void);
+media_row_t   new_media_row (void);
 
 #endif
