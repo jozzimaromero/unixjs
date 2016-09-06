@@ -2,16 +2,17 @@
 //Gwt::Core
 Gwt.Core = new Object ();
 
-Gwt.Core.Contrib = {
-	"Protocol" : window.location.protocol,
-	"HostName" : window.location.hostname,
-	"Port" : window.location.port,
-	"Backend" : this.Protocol+"//"+this.HostName+"/backend",
-	"Host": this.Protocol+"//"+this.HostName+"/frontend",
-	"Images": "share/images/",
-	"Icons": "share/icons/",
-	"db": "remote",
-	"request_id": 0,
-};
+Gwt.Core.Contrib = new Object ();
+Gwt.Core.Contrib.Protocol = window.location.protocol;
+Gwt.Core.Contrib.HostName = window.location.hostname;
+Gwt.Core.Contrib.Port = window.location.port;
+Gwt.Core.Contrib.Host = Gwt.Core.Contrib.Protocol+"//"+Gwt.Core.Contrib.HostName+"/";
+Gwt.Core.Contrib.Backend = Gwt.Core.Contrib.Host+"backend/";
+Gwt.Core.Contrib.Frontend = Gwt.Core.Contrib.Host+"frontend/";
+Gwt.Core.Contrib.Images = "share/images/";
+Gwt.Core.Contrib.Icons = "share/icons/";
+Gwt.Core.Contrib.db = "remote";
+Gwt.Core.Contrib.request_id = 0;
+
 //End Gwt::Core::Contrib
 //###########################################################################

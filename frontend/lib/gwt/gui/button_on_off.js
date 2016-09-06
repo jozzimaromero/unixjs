@@ -53,7 +53,9 @@ Gwt.Gui.ButtonOnOff.prototype.Click = function ()
 		
 	if (this.Status === 0)
 	{
-		this.Graphic.SetPosition (0,24);
+		//Habia un pequeño bug porque el metodo SetPosition(Y, X) recibia los argumentos trocados
+		//X era Y y Y era X, como ya lo arreglé tenga cuidado la declaración de SetPosition(X, Y) es la correcta;
+		this.Graphic.SetPosition (24,0);
 		var colorbackground = new Gwt.Gui.Contrib.Color (0,102,255);
 		colorbackground.SetAlpha (0.3);
 		this.SetBackgroundColor(colorbackground);

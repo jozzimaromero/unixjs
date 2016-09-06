@@ -34,7 +34,7 @@ Gwt.Gui.Window.prototype.InitWindow = function ()
 	var Top = (Math.random () * Gwt.Gui.SCREEN_DEVICE_HEIGHT)-this.GetHeight ();
 	if (Left < 0) Left=0;
 	if (Top < 0) Top=0;
-	this.SetPosition (Top, Left);
+	this.SetPosition (Left, top);
 }
 
 Gwt.Gui.Window.prototype.SetBorderSpacing = function (Border)

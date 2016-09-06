@@ -11,6 +11,7 @@ function test ()
     
 	this.file1 = new Gwt.Gui.File ();
 	this.file1.AddEvent (Gwt.Gui.Event.Form.Change, this.send.bind(this));
+	this.file1.SetPosition (25, 10);
 	
 	/*
     this.graphic = new Gwt.Graphic.Svg.Canvas ();

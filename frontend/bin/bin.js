@@ -61,7 +61,7 @@ function login ()
 	
 	this.imageLogin = new Gwt.Gui.Image(Gwt.Core.Contrib.Images+"connecting_world.svg");
 	this.imageLogin.SetSize (500, 350);
-	this.imageLogin.SetPosition (180, 170);
+	this.imageLogin.SetPosition (170, 180);
 	this.imageLogin.SetPositionType (Gwt.Gui.Contrib.PositionType.Absolute);
 	
 	this.title_label = new Gwt.Gui.StaticText ("Login");
@@ -79,7 +79,7 @@ function login ()
 	this.controls_container = new Gwt.Gui.VBox ();
 	this.controls_container.SetSize (180, 170);
 	
-	this.controls_container.SetPosition (((this.GetHeight()*50)/100)-(this.controls_container.GetHeight()/2), (this.GetWidth()*70)/100);
+	this.controls_container.SetPosition ((this.GetWidth()*70)/100, ((this.GetHeight()*50)/100)-(this.controls_container.GetHeight()/2));
 	
 	this.Add (this.imageLogin);
 	this.Add (this.controls_container);
@@ -231,6 +231,7 @@ function test ()
     
 	this.file1 = new Gwt.Gui.File ();
 	this.file1.AddEvent (Gwt.Gui.Event.Form.Change, this.send.bind(this));
+	this.file1.SetPosition (25, 10);
 	
 	/*
     this.graphic = new Gwt.Graphic.Svg.Canvas ();

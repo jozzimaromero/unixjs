@@ -4,6 +4,7 @@ Gwt.Gui.File  = function (Placeholder)
 {
 	Gwt.Gui.Frame.call (this);
 	
+	this.Input = null;
 	this.DataSize = null;
 	this.FileName = null;
 	this.MimeType = null;
@@ -22,19 +23,27 @@ Gwt.Gui.File.prototype.FinalizeFile = function ()
 
 Gwt.Gui.File.prototype.InitFile = function ()
 {
-	this.SetHtml ("input");
-	this.Html.setAttribute ("type", "file");
-	this.Html.removeAttribute ("multiple");
-	this.SetOpacity (1);
-	this.SetWidth (180);
-	this.SetClassName ("Gwt_Gui_Text");
+	this.Input = new Gwt.Gui.Frame();
+	this.Input.SetHtml ("input");
+	this.Input.Html.setAttribute ("type", "file");
+	this.Input.Html.removeAttribute ("multiple");
+	this.Input.SetOpacity (0);
+	this.Input.SetWidth (24);
+	this.Input.SetHeight (24);
 	
-	this.AddEvent (Gwt.Gui.Event.Form.Change, this.UpdateInfo.bind (this));
+	this.SetWidth (24);
+	this.SetHeight (24);
+	this.SetClassName ("Gwt_Gui_File");
+	this.SetBackgroundImage (Gwt.Core.Contrib.Frontend+Gwt.Core.Contrib.Images+"appbar.paperclip.rotated.svg");
+	this.SetBackgroundSize (24, 24);
+	this.Add (this.Input);
+	
+	this.Input.AddEvent (Gwt.Gui.Event.Form.Change, this.UpdateInfo.bind (this));
 }
 
 Gwt.Gui.File.prototype.UpdateInfo = function ()
 {
-	this.Data = this.Html.files[0];
+	this.Data = this.Input.Html.files[0];
 	this.DataSize = this.Data.size;
 	this.FileName = this.Data.name;
 	this.MimeType = this.Data.type;
@@ -66,6 +75,11 @@ Gwt.Gui.File.prototype.Reset = function ()
 	this.DataSize = null;
 	this.FileName = null;
 	this.MimeType = null;
+}
+
+Gwt.Gui.File.prototype.AddEvent = function (Event, Callback)
+{
+	this.Input.AddEvent (Event, Callback);
 }
 
 //Ends Gwt::Gui::File
