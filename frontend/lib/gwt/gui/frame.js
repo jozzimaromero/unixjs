@@ -204,7 +204,7 @@ Gwt.Gui.Frame.prototype.GetHtml = function ()
 	 return this.Html;
 }
 
-Gwt.Gui.Frame.prototype.SetPosition = function (Top, Left)
+Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
 {
 	var width_add = Gwt.Gui.SCREEN_DEVICE_WIDTH * 0.05;
 	var height_add = Gwt.Gui.SCREEN_DEVICE_HEIGHT * 0.05;
@@ -212,7 +212,7 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Top, Left)
 	this.PositionTop = Top;
 	this.PositionLeft = Left;
 	
-	if (this.PositionTop === Gwt.Gui.WIN_POS_CENTER && this.PositionLeft === undefined)
+	if (this.PositionLeft === Gwt.Gui.WIN_POS_CENTER && this.PositionTop === undefined)
 	{
 		var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2);
 		var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2);

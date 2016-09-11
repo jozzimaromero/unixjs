@@ -21,7 +21,7 @@ Gwt.Gui.Image.prototype.InitImage = function (Image)
 	this.SetClassName ("Gwt_Gui_Image");
 	
 	this.SetCursor (Gwt.Gui.Contrib.Cursor.Default);
-	this.SetImage (Image || Gwt.Core.Contrib.Host+Gwt.Core.Contrib.Images+"default_image.svg");
+	this.SetImage (Image || Gwt.Core.Contrib.Frontend+Gwt.Core.Contrib.Images+"default_image.svg");
 	this.SetSelectable ("none");
 }
 

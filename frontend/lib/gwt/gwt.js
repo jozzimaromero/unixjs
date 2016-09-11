@@ -7,17 +7,18 @@ Gwt = new Object ();
 //Gwt::Core
 Gwt.Core = new Object ();
 
-Gwt.Core.Contrib = {
-	"Protocol" : window.location.protocol,
-	"HostName" : window.location.hostname,
-	"Port" : window.location.port,
-	"Backend" : this.Protocol+"//"+this.HostName+"/backend",
-	"Host": this.Protocol+"//"+this.HostName+"/frontend",
-	"Images": "share/images/",
-	"Icons": "share/icons/",
-	"db": "remote",
-	"request_id": 0,
-};
+Gwt.Core.Contrib = new Object ();
+Gwt.Core.Contrib.Protocol = window.location.protocol;
+Gwt.Core.Contrib.HostName = window.location.hostname;
+Gwt.Core.Contrib.Port = window.location.port;
+Gwt.Core.Contrib.Host = Gwt.Core.Contrib.Protocol+"//"+Gwt.Core.Contrib.HostName+"/";
+Gwt.Core.Contrib.Backend = Gwt.Core.Contrib.Host+"backend/";
+Gwt.Core.Contrib.Frontend = Gwt.Core.Contrib.Host+"frontend/";
+Gwt.Core.Contrib.Images = "share/images/";
+Gwt.Core.Contrib.Icons = "share/icons/";
+Gwt.Core.Contrib.db = "remote";
+Gwt.Core.Contrib.request_id = 0;
+
 //End Gwt::Core::Contrib
 //###########################################################################
 //Gwt::Core::Request
@@ -42,7 +43,7 @@ Gwt.Core.Request.prototype.InitRequest = function (Url, Func, Data)
 
 Gwt.Core.Request.prototype.Send = function ()
 {	
-	if (this.Data instanceof File)
+	if (this.Data.userfile !== undefined)
 	{
 		this.UploadFile ();
 		return;
@@ -54,16 +55,22 @@ Gwt.Core.Request.prototype.UploadFile =  function ()
 {
 	this.Boundary = "---------------------------" + Date.now().toString(16);
 	this.XHR.setRequestHeader("Content-Type", "multipart\/form-data; boundary=" + this.Boundary);
+	//this.XHR.setRequestHeader("document_type", this.Data.document_type.toString ());
+	//this.XHR.setRequestHeader("document", this.Data.document.toString ());
 	
-	this.Multipart = [];	
-	this.Multipart.push ("--"+this.Boundary+"\r\n");
+	this.Multipart = [];
 	
-	var ContentDisposition = "Content-Disposition: form-data; name=\"userfile\"; filename=\""+ this.Data.name + "\"\r\nContent-Type: " + this.Data.type + "\r\n\r\n";
-	this.Multipart.push (ContentDisposition);
-	
+	this.Multipart.push ("\r\n--"+this.Boundary+"\r\n");
+	var ContentDispositionDocumentType = "Content-Disposition: form-data; name=\"user_info\"; filename=\"document_type.txt\"\r\nContent-Type: \"txt\"\r\n\r\n";
+	this.Multipart.push (ContentDispositionDocumentType);
+	this.Multipart.push (JSON.stringify(this.Data.user_info));
+
+	this.Multipart.push ("\r\n--"+this.Boundary+"\r\n");
+	var ContentDispositionFile = "Content-Disposition: form-data; name=\"userfile\"; filename=\""+ this.Data.userfile.name + "\"\r\nContent-Type: " + this.Data.userfile.type + "\r\n\r\n";
+	this.Multipart.push (ContentDispositionFile);
 	
 	this.FileData = new FileReader ();
-	this.FileData.readAsBinaryString (this.Data);
+	this.FileData.readAsBinaryString (this.Data.userfile);
     
 	this.FileData.addEventListener ("load", this.SendFile.bind(this), false);
 }
@@ -75,6 +82,8 @@ Gwt.Core.Request.prototype.SendFile = function ()
 	this.Multipart.push ("\r\n--"+this.Boundary+"--");
 	
 	var RawData = this.Multipart.join ("");
+	
+	this.XHR.setRequestHeader("Content-Length", RawData.length);
 	
 	var NBytes = RawData.length, Uint8Data = new Uint8Array(NBytes);
     for (var i = 0; i < NBytes; i++)
@@ -843,7 +852,7 @@ Gwt.Gui.Frame.prototype.GetHtml = function ()
 	 return this.Html;
 }
 
-Gwt.Gui.Frame.prototype.SetPosition = function (Top, Left)
+Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
 {
 	var width_add = Gwt.Gui.SCREEN_DEVICE_WIDTH * 0.05;
 	var height_add = Gwt.Gui.SCREEN_DEVICE_HEIGHT * 0.05;
@@ -851,7 +860,7 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Top, Left)
 	this.PositionTop = Top;
 	this.PositionLeft = Left;
 	
-	if (this.PositionTop === Gwt.Gui.WIN_POS_CENTER && this.PositionLeft === undefined)
+	if (this.PositionLeft === Gwt.Gui.WIN_POS_CENTER && this.PositionTop === undefined)
 	{
 		var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2);
 		var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2);
@@ -1284,7 +1293,7 @@ Gwt.Gui.Window.prototype.InitWindow = function ()
 	var Top = (Math.random () * Gwt.Gui.SCREEN_DEVICE_HEIGHT)-this.GetHeight ();
 	if (Left < 0) Left=0;
 	if (Top < 0) Top=0;
-	this.SetPosition (Top, Left);
+	this.SetPosition (Left, top);
 }
 
 Gwt.Gui.Window.prototype.SetBorderSpacing = function (Border)
@@ -1519,6 +1528,7 @@ Gwt.Gui.File  = function (Placeholder)
 {
 	Gwt.Gui.Frame.call (this);
 	
+	this.Input = null;
 	this.DataSize = null;
 	this.FileName = null;
 	this.MimeType = null;
@@ -1537,19 +1547,27 @@ Gwt.Gui.File.prototype.FinalizeFile = function ()
 
 Gwt.Gui.File.prototype.InitFile = function ()
 {
-	this.SetHtml ("input");
-	this.Html.setAttribute ("type", "file");
-	this.Html.removeAttribute ("multiple");
-	this.SetOpacity (1);
-	this.SetWidth (180);
-	this.SetClassName ("Gwt_Gui_Text");
+	this.Input = new Gwt.Gui.Frame();
+	this.Input.SetHtml ("input");
+	this.Input.Html.setAttribute ("type", "file");
+	this.Input.Html.removeAttribute ("multiple");
+	this.Input.SetOpacity (0);
+	this.Input.SetWidth (24);
+	this.Input.SetHeight (24);
 	
-	this.AddEvent (Gwt.Gui.Event.Form.Change, this.UpdateInfo.bind (this));
+	this.SetWidth (24);
+	this.SetHeight (24);
+	this.SetClassName ("Gwt_Gui_File");
+	this.SetBackgroundImage (Gwt.Core.Contrib.Frontend+Gwt.Core.Contrib.Images+"appbar.paperclip.rotated.svg");
+	this.SetBackgroundSize (24, 24);
+	this.Add (this.Input);
+	
+	this.Input.AddEvent (Gwt.Gui.Event.Form.Change, this.UpdateInfo.bind (this));
 }
 
 Gwt.Gui.File.prototype.UpdateInfo = function ()
 {
-	this.Data = this.Html.files[0];
+	this.Data = this.Input.Html.files[0];
 	this.DataSize = this.Data.size;
 	this.FileName = this.Data.name;
 	this.MimeType = this.Data.type;
@@ -1581,6 +1599,11 @@ Gwt.Gui.File.prototype.Reset = function ()
 	this.DataSize = null;
 	this.FileName = null;
 	this.MimeType = null;
+}
+
+Gwt.Gui.File.prototype.AddEvent = function (Event, Callback)
+{
+	this.Input.AddEvent (Event, Callback);
 }
 
 //Ends Gwt::Gui::File
@@ -1780,7 +1803,7 @@ Gwt.Gui.Image.prototype.InitImage = function (Image)
 	this.SetClassName ("Gwt_Gui_Image");
 	
 	this.SetCursor (Gwt.Gui.Contrib.Cursor.Default);
-	this.SetImage (Image || Gwt.Core.Contrib.Host+Gwt.Core.Contrib.Images+"default_image.svg");
+	this.SetImage (Image || Gwt.Core.Contrib.Frontend+Gwt.Core.Contrib.Images+"default_image.svg");
 	this.SetSelectable ("none");
 }
 
@@ -2661,7 +2684,9 @@ Gwt.Gui.ButtonOnOff.prototype.Click = function ()
 		
 	if (this.Status === 0)
 	{
-		this.Graphic.SetPosition (0,24);
+		//Habia un pequeño bug porque el metodo SetPosition(Y, X) recibia los argumentos trocados
+		//X era Y y Y era X, como ya lo arreglé tenga cuidado la declaración de SetPosition(X, Y) es la correcta;
+		this.Graphic.SetPosition (24,0);
 		var colorbackground = new Gwt.Gui.Contrib.Color (0,102,255);
 		colorbackground.SetAlpha (0.3);
 		this.SetBackgroundColor(colorbackground);

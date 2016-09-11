@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <json-c/json.h>
 
 #ifndef _CONTRIB_
 #define _CONTRIB_

@@ -2,7 +2,10 @@
 #include "uploadfile.h"
 #include "media_row.h"
 #include "variable_row.h"
+#include "auth_user_row.h"
+#include "contrib.h"
 
+#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -12,8 +15,10 @@
 int upload_file (struct http_request *req)
 {
     int                 fd;
-    struct http_file    *file;
+    struct http_file    *file=NULL;
+    struct http_file    *user_info=NULL;
     u_int8_t            buf[BUFSIZ];
+    u_int8_t            buf_user_info[BUFSIZ];
     ssize_t             ret, written;
     const char          *msg=NULL;
     char                path[64]="";
@@ -21,22 +26,49 @@ int upload_file (struct http_request *req)
     char                *subpath = NULL;
 	char                *type = NULL;
 	unsigned int        i = 0;
-    variable_row        variable = new_variable_row ();
-    media_row           media = new_media_row ();
+    variable_row_t      variable = new_variable_row ();
+    media_row_t         media = new_media_row ();
+    auth_user_row_t     user = new_void_auth_user_row ();
+    
 	    
     if (req->method != HTTP_METHOD_POST)
     {
-        msg = "method is not post";
-        http_response (req, 200, msg,  strlen(msg));
+        http_response_json_msg (req, KORE_RESULT_ERROR, "method is not post");
+        return (KORE_RESULT_OK);
+    }
+
+    http_populate_multipart_form (req);
+    //kore_log (LOG_INFO, "%s", req->http_body->data);
+    
+    if ((user_info = http_file_lookup (req, "user_info")) == NULL)
+    {
+        http_response_json_msg (req, KORE_RESULT_ERROR, "user_info key not found");
         return (KORE_RESULT_OK);
     }
     
-    http_populate_multipart_form (req);
+    int ret_tmp = http_file_read (user_info, buf_user_info, sizeof(buf_user_info));
+    
+    if (ret_tmp < 0)
+    {
+        http_response_json_msg (req, KORE_RESULT_ERROR, "user_info key error data");
+        return (KORE_RESULT_OK);
+    }
+    
+    char data_user_info[BUFSIZ];
+    sprintf (data_user_info, "%s", buf_user_info);
+   
+    json_object *jobj = NULL;
+    jobj =  json_tokener_parse(data_user_info);
+    
+    if (json_to_auth_user_row (jobj, &user) == KORE_RESULT_ERROR)
+    {
+        http_response_json_msg (req, KORE_RESULT_ERROR, "document or document_type key not found");
+        return (KORE_RESULT_OK);
+    }
     
     if ((file = http_file_lookup (req, "userfile")) == NULL)
     {
-        msg = "file \"userfile\" not found";
-        http_response (req, 200, msg,  strlen(msg));
+        http_response_json_msg (req, KORE_RESULT_ERROR, "userfile key not found");
         return (KORE_RESULT_OK);
     }
     
@@ -110,8 +142,7 @@ int upload_file (struct http_request *req)
     
     if (subpath == NULL)
     {
-        msg = "file not supported";
-        http_response (req, 200, msg,  strlen(msg));
+        http_response_json_msg (req, KORE_RESULT_ERROR, "file type not suported");
         return (KORE_RESULT_OK);
     }
     
@@ -120,12 +151,31 @@ int upload_file (struct http_request *req)
     if (Connection_ping (conn))
     {   
         TRY
-        {   
-            ResultSet_T r = Connection_executeQuery (conn, "SELECT name, val_int FROM variable WHERE name='%s';", type);
-            PreparedStatement_T p;
+        {
+            ResultSet_T r;
+            r = Connection_executeQuery (conn, "SELECT id FROM auth_user WHERE document_type='%s' AND document='%s';", user.document_type, user.document);
             if (ResultSet_next (r))
             {
-                strcpy (variable.name, type);
+                user.id = ResultSet_getLLongByName (r, "id");
+                char *tmp = variable.name;
+                sprintf (tmp, "%lld", user.id);
+                strcat (variable.name, "_");
+                strcat (variable.name, type);
+            }
+            else
+            {
+                Connection_close (conn);
+        
+                http_response_json_msg (req, KORE_RESULT_ERROR, "user not found in db");
+                return (KORE_RESULT_OK);
+                
+            }
+            
+            PreparedStatement_T p;            
+            r = Connection_executeQuery (conn, "SELECT name, val_int FROM variable WHERE name='%s';", variable.name);
+           
+            if (ResultSet_next (r))
+            {
                 variable.val_int = ResultSet_getLLongByName (r, "val_int");
                 variable.val_int += 1;
                 p = Connection_prepareStatement (conn, "UPDATE variable SET val_int=? WHERE name=?");
@@ -135,7 +185,6 @@ int upload_file (struct http_request *req)
             }
             else
             {
-                strcpy (variable.name, type);
                 variable.val_int = 0;
                 p = Connection_prepareStatement (conn, "INSERT INTO variable (name, val_int) VALUES (?, ?)");
                 PreparedStatement_setString (p, 1, variable.name);
@@ -143,8 +192,13 @@ int upload_file (struct http_request *req)
                 PreparedStatement_execute (p);
             }
             
-            char *ptr = media.name;
-            sprintf (ptr, "%lld", variable.val_int);
+            char usr_str[32];
+            sprintf (usr_str, "%lld", user.id);
+            char var_str[32];
+            sprintf (var_str, "%lld", variable.val_int);
+            strcpy (media.name, usr_str);
+            strcat (media.name, "_");
+            strcat (media.name, var_str);
             strcpy (media.type, type);
             
             p = Connection_prepareStatement (conn, "INSERT INTO media (name, type) VALUES (?, ?)");
