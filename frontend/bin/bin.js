@@ -265,9 +265,11 @@ function test ()
 	
 	this.buttonoff = new Gwt.Gui.ButtonOnOff ();
 	this.buttonoff.SetPosition (25, 25);
+		
 	
-	this.Add (this.file1);
+	//this.Add (this.file1);
     this.Add (this.buttonoff);
+	
 	
 	/*this.graphic.Add (this.rect1);
 	this.graphic.Add (this.circle1);

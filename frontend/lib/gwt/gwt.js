@@ -2631,11 +2631,29 @@ Gwt.Gui.ButtonOnOff.prototype.InitButtonOnOff = function ()
 	this.Circle.SetCx (12);
 	this.Circle.SetCy (12);
 	
+	this.Text = new Gwt.Gui.StaticText (Text);
+	this.Text.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
+	this.Text.SetValign (Gwt.Gui.Contrib.Valign.Middle);
+	//this.SetSize (this.Graphic.GetWidth()+this.Text.GetWidth(), 10);
+	
 	this.AddEvent (Gwt.Gui.Event.Mouse.Click, this.Click.bind(this));
 	
 	this.Graphic.Add (this.Circle);
+	this.Circle.Add (this.Text)
 	this.Add (this.Graphic);
+	//this.Add (this.Text);
+}
 
+Gwt.Gui.ButtonOnOff.prototype.SetText = function ()
+{
+	this.Text.SetText = "Off";
+	this.Text.SetWidth (this.GetWidth ()*0.7);
+}
+
+Gwt.Gui.ButtonOnOff.prototype.SetFontSize = function (FontSize)
+{
+	this.Text.SetFontSize (FontSize);
+	this.SetSize (this.Graphic.GetWidth()+this.Text.GetWidth(), 24);
 }
 
 Gwt.Gui.ButtonOnOff.prototype.Click = function ()
