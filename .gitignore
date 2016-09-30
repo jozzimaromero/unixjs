@@ -31,3 +31,5 @@
 # Debug files
 *.dSYM/
 *.su
+/frontend/gwt/nbproject/private/
+/frontend/nbproject/private/

@@ -192,7 +192,7 @@ Gwt.Gui.SelectBox.prototype.FinalizeSelectBox = function ()
 
 Gwt.Gui.SelectBox.prototype.InitSelectBox = function (Placeholder, options)
 {
-	this.SetClassName ("Gwt_Gui_Select_box");
+	this.SetClassName ("Gwt_Gui_Select_Box");
 	this.SetExpand (true);
 	this.AddEvent (Gwt.Gui.Event.Mouse.Click, this.ShowDialog.bind(this));
 	this.AddEvent (Gwt.Gui.Event.Keyboard.KeyPress, this.ShowDialog.bind(this));

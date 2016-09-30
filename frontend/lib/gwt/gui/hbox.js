@@ -6,7 +6,7 @@ Gwt.Gui.HBox = function (Margin)
         this.Childs = null;
         this.MarginElements = null;
 	
-        this.InitHbox (Margin);
+        this.InitHBox (Margin);
 }
 
 Gwt.Gui.HBox.prototype = new Gwt.Gui.Frame ();
@@ -16,17 +16,18 @@ Gwt.Gui.HBox.prototype.FinalizeHbox = function ()
 {
         this.Childs = null;
         this.MarginElements = null;
-	
+        
         this.FinalizeFrame ();
 }
 
-Gwt.Gui.HBox.prototype.InitHbox = function (Margin)
+Gwt.Gui.HBox.prototype.InitHBox = function (Margin)
 {
         this.SetClassName ("Gwt_Gui_HBox");
         this.SetDisplay (Gwt.Gui.Contrib.Display.Block);
+        this.SetHorizontalContainer (true);
 	
         this.Childs = [];
-        this.MarginElements = typeof(Margin) == "undefined" ? 12 : Margin;
+        this.MarginElements = typeof(Margin) === "undefined" ? 12 : Margin;
 }
 
 Gwt.Gui.HBox.prototype.GetChilds = function ()
@@ -44,12 +45,12 @@ Gwt.Gui.HBox.prototype.Add = function (Element)
 	this.GetChilds ().push (Element);
         this.GetHtml ().appendChild (Element.GetHtml ());
         
-        if (Element.GetClassName () == "Gwt_Gui_VBox")
+        if (Element instanceof Gwt.Gui.VBox)
         {
                 var vboxs = [];
                 for (var i = 0; i < this.GetChilds ().length; i++)
                 {
-                        if (this.GetChilds ()[i].GetClassName () == "Gwt_Gui_VBox")
+                        if (this.GetChilds ()[i] instanceof Gwt.Gui.VBox)
                         {
                                 vboxs.push (this.GetChilds ()[i]);
                         }
@@ -57,7 +58,7 @@ Gwt.Gui.HBox.prototype.Add = function (Element)
 
                 for (var j = 0; j < vboxs.length; j++)
                 {
-                        vboxs[j].SetWidth (this.GetWidth ()/vboxs.length);
+                        vboxs[j].SetWidth (this.GetWidth () / vboxs.length);
                         vboxs[j].SetHeight (this.GetHeight ());
                 }
         }
@@ -65,17 +66,15 @@ Gwt.Gui.HBox.prototype.Add = function (Element)
 	{
 		Element.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
 		
-		if (Element.GetHtml () == this.GetHtml ().firstChild)
+		if (Element.GetHtml () === this.GetHtml ().firstChild)
 		{
 			Element.SetMargin (0);
 		}
-		else if (Element.GetHtml () == this.GetHtml ().lastChild)
+		else if (Element.GetHtml () === this.GetHtml ().lastChild)
 		{
 			Element.SetMarginLeft (this.GetMarginElements ());
 		}
 	}
 }
-
-
 //Ends Gwt::Gui::HBox
 //##################################################################################################

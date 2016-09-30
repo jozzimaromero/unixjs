@@ -20,6 +20,7 @@ cat gui/file.js >> gwt.js
 cat gui/text.js >> gwt.js
 cat gui/hbox.js >> gwt.js
 cat gui/image.js >> gwt.js
+cat gui/avatar.js >> gwt.js
 cat gui/select_box.js >> gwt.js
 cat gui/static_text.js >> gwt.js
 cat gui/vbox.js >> gwt.js
@@ -27,6 +28,9 @@ cat gui/slider.js >> gwt.js
 cat gui/clock.js >> gwt.js
 cat gui/button_sv_up_dl.js >> gwt.js
 cat gui/button_on_off.js >> gwt.js
+cat gui/icon_control.js >> gwt.js
+cat gui/icon_entry.js >> gwt.js
+cat gui/icon_select_box.js >> gwt.js
 #cat gui/date.js >> gwt.js
 
 

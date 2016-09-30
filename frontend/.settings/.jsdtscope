@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/|**/node_modules/*|lib/gwt/|lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/en-us/|lib/gwt/graphic/|lib/gwt/build/|**/bower_components/*|boot/|lib/paho/src/|bin/build/|lib/paho/build/|lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui/|lib/jsonrpc/build/|bin/|lib/gwt/graphic/svg/|lib/jsonrpc/|**/*.min.js|lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/zh-cn/|lib/paho/src/test/|lib/jssha/src/|lib/jssha/build/|lib/jspdf/build/|lib/gwt/core/|lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/|lib/paho/|lib/jspdf/|boot/build/|lib/gwt/gui/" kind="src" path=""/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js|build/" kind="src" path="bin"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="bin/build"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js|build/" kind="src" path="boot"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="boot/build"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|gui/|core/|graphic/|**/*.min.js|build/|graphic/svg/" kind="src" path="lib/gwt"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/gwt/build"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/gwt/core"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js|svg/" kind="src" path="lib/gwt/graphic"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/gwt/graphic/svg"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/gwt/gui"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js|build/" kind="src" path="lib/jsonrpc"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/jsonrpc/build"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js|build/" kind="src" path="lib/jspdf"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/jspdf/build"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/jssha/build"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/jssha/src"/>
+	<classpathentry excluding="src/test/|**/bower_components/*|**/node_modules/*|org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/|org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/en-us/|**/*.min.js|org.eclipse.paho.mqtt.javascript.utility/js/|build/|src/|org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/zh-cn/|org.eclipse.paho.mqtt.javascript.utility/js/mqttui/" kind="src" path="lib/paho"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/paho/build"/>
+	<classpathentry excluding="mqttui/|mqttui/nls/zh-cn/|**/bower_components/*|**/node_modules/*|mqttui/nls/|**/*.min.js|mqttui/nls/en-us/" kind="src" path="lib/paho/org.eclipse.paho.mqtt.javascript.utility/js"/>
+	<classpathentry excluding="nls/zh-cn/|**/bower_components/*|**/node_modules/*|nls/|**/*.min.js|nls/en-us/" kind="src" path="lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui"/>
+	<classpathentry excluding="en-us/|**/bower_components/*|zh-cn/|**/node_modules/*|**/*.min.js" kind="src" path="lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/en-us"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/paho/org.eclipse.paho.mqtt.javascript.utility/js/mqttui/nls/zh-cn"/>
+	<classpathentry excluding="**/bower_components/*|test/|**/node_modules/*|**/*.min.js" kind="src" path="lib/paho/src"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="lib/paho/src/test"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>

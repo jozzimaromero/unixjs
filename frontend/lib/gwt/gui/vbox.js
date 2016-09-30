@@ -1,6 +1,6 @@
 //###############################################################################################################################################
 //Class Gwt::Gui::VBox
-Gwt.Gui.VBox = function (Parent, Margin)
+Gwt.Gui.VBox = function (Margin)
 {
 	Gwt.Gui.Frame.call (this);
 	
@@ -8,13 +8,13 @@ Gwt.Gui.VBox = function (Parent, Margin)
 	this.MarginElements = null;
 	this.Alignment = null;
 	
-	this.init_vbox (Margin);
+	this.InitVBox (Margin);
 }
 
 Gwt.Gui.VBox.prototype = new Gwt.Gui.Frame ();
 Gwt.Gui.VBox.prototype.constructor = Gwt.Gui.VBox;
 
-Gwt.Gui.VBox.prototype.finalize_vbox = function ()
+Gwt.Gui.VBox.prototype.FinalizeVBox = function ()
 {
 	this.Childs = null;
 	this.MarginElements = null;
@@ -23,14 +23,14 @@ Gwt.Gui.VBox.prototype.finalize_vbox = function ()
 	this.FinalizeFrame ();
 }
 
-Gwt.Gui.VBox.prototype.init_vbox = function (Margin)
+Gwt.Gui.VBox.prototype.InitVBox = function (Margin)
 {
 	this.SetClassName ("Gwt_Gui_VBox");
 	this.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
 	this.SetAlignment (Gwt.Gui.ALIGN_LEFT);
 	
 	this.Childs = [];
-	this.MarginElements = typeof(Margin) == "undefined" ? 12 : Margin;
+	this.MarginElements = typeof(Margin) === "undefined" ? 12 : Margin;
 }
 
 Gwt.Gui.VBox.prototype.GetChilds = function ()
@@ -48,12 +48,12 @@ Gwt.Gui.VBox.prototype.Add = function (Element)
 	this.GetChilds ().push (Element);
         this.GetHtml ().appendChild (Element.GetHtml ());
 	
-	if (Element.GetClassName () == "Gwt_Gui_HBox")
+	if (Element instanceof Gwt.Gui.HBox)
 	{
 		var HBoxs = [];
 		for (var i = 0; i < this.GetChilds ().length; i++)
 		{
-			if (this.GetChilds ()[i].GetClassName () == "Gwt_Gui_HBox")
+			if (this.GetChilds ()[i] instanceof Gwt.Gui.HBox)
 			{
 				HBoxs.push (this.GetChilds ()[i]);
 			}
@@ -62,25 +62,25 @@ Gwt.Gui.VBox.prototype.Add = function (Element)
 		for (var j = 0; j < HBoxs.length; j++)
 		{
 			HBoxs[j].SetWidth (this.GetWidth ());
-			HBoxs[j].SetHeight (this.GetHeight ()/HBoxs.length);
+			HBoxs[j].SetHeight (this.GetHeight () / HBoxs.length);
 		}
 	}
 	else
 	{
 		Element.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
 		
-		if (Element.GetHtml () == this.GetHtml ().firstChild)
+		if (Element.GetHtml () === this.GetHtml ().firstChild)
 		{
 			Element.SetMargin (0);
 		}
-		else if (Element.GetHtml () == this.GetHtml ().lastChild)
+		else if (Element.GetHtml () === this.GetHtml ().lastChild)
 		{
 			Element.SetMarginTop (this.GetMarginElements ());
 		}
 		
-		if (Element.IsExpand ()) Element.SetWidth(this.GetWidth()*0.99);
+		if (Element.GetExpand ()) Element.SetWidth(this.GetWidth()*0.99);
 		
-		if (!Element.IsExpand())
+		if (!Element.GetExpand ())
 		{
 		    switch (this.GetAlignment ())
 		    {

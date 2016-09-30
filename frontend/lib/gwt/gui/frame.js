@@ -157,28 +157,24 @@ Gwt.Gui.Frame.prototype.SetHtml = function (Element)
 }
 Gwt.Gui.Frame.prototype.SetTabIndex = function (TabIndex)
 {
-	this.TabIndex = TabIndex;
-	this.Html.tabIndex = this.TabIndex;
+    this.TabIndex = TabIndex;
+    this.Html.tabIndex = this.TabIndex;
 }
 
 Gwt.Gui.Frame.prototype.SetSize = function (Width, Height)
 {
-	this.Width = Width;
-	this.Height = Height;
-    this.SetMaxWidth (this.Width);
-    this.SetMaxHeight (this.Height);
-	this.SetMinWidth (this.Width);
-    this.SetMinHeight (this.Height);
-	this.Html.style.width = this.Width+"px";
-	this.Html.style.height = this.Height+"px";
+    this.Width = Width;
+    this.Height = Height;
+    this.SetWidth(this.Width);
+    this.SetHeight(this.Height);
 }
 
 Gwt.Gui.Frame.prototype.SetWidth = function (Width)
 {
-	this.Width = Width;
+    this.Width = Width;
     this.SetMaxWidth (this.Width);
-	this.SetMinWidth (this.Width);
-	this.Html.style.width = this.Width+"px";
+    this.SetMinWidth (this.Width);
+    this.Html.style.width = this.Width+"px";
 }
 
 Gwt.Gui.Frame.prototype.SetHeight = function (Height)
@@ -472,74 +468,99 @@ Gwt.Gui.Frame.prototype.SetMinHeight = function (MinHeight)
 
 Gwt.Gui.Frame.prototype.SetMinWidth = function (MinWidth)
 {
-	this.MinWidth = MinWidth;
-	this.Html.style.minWidth = this.MinWidth+"px";
+    this.MinWidth = MinWidth;
+    this.Html.style.minWidth = this.MinWidth+"px";
 }
 
 Gwt.Gui.Frame.prototype.SetMargin = function (Margin)
 {
-	this.Margin = Margin;
-	this.Html.style.margin = this.Margin+"px";
+    this.Margin = Margin;
+    this.Html.style.margin = this.Margin+"px";
+}
+
+Gwt.Gui.Frame.prototype.GetMargin = function (Margin)
+{
+    return this.Margin;
 }
 
 Gwt.Gui.Frame.prototype.SetMarginTop = function (MarginTop)
 {
-	this.MarginTop = MarginTop;
-	this.Html.style.marginTop = this.MarginTop+"px";
+    this.MarginTop = MarginTop;
+    this.Html.style.marginTop = this.MarginTop+"px";
+}
+
+Gwt.Gui.Frame.prototype.GetMarginTop = function (Margin)
+{
+    return this.MarginTop;
 }
 
 Gwt.Gui.Frame.prototype.SetMarginBottom = function (MarginBottom)
 {
-	this.MarginBottom = MarginBottom;
-	this.Html.style.marginBottom = this.MarginBottom+"px";
+    this.MarginBottom = MarginBottom;
+    this.Html.style.marginBottom = this.MarginBottom+"px";
+}
+
+Gwt.Gui.Frame.prototype.GetMarginBottom = function (Margin)
+{
+    return this.MarginBottom;
 }
 
 Gwt.Gui.Frame.prototype.SetMarginLeft = function (MarginLeft)
 {
-	this.MarginLeft = MarginLeft;
-	this.Html.style.marginLeft = this.MarginLeft+"px";
+    this.MarginLeft = MarginLeft;
+    this.Html.style.marginLeft = this.MarginLeft+"px";
+}
+
+Gwt.Gui.Frame.prototype.GetMarginLeft = function (Margin)
+{
+    return this.MarginLeft;
 }
 
 Gwt.Gui.Frame.prototype.SetMarginRight = function (MarginRigth)
 {
-	this.MarginRight = MarginRigth;
-	this.Html.style.marginRight = this.MarginRight+"px";
+    this.MarginRight = MarginRigth;
+    this.Html.style.marginRight = this.MarginRight+"px";
+}
+
+Gwt.Gui.Frame.prototype.GetMarginRight = function (Margin)
+{
+    return this.MarginRight;
 }
 
 Gwt.Gui.Frame.prototype.SetPadding = function (Padding)
 {
-	this.Padding = Padding;
-	this.Html.style.padding = this.Padding+"px";
+    this.Padding = Padding;
+    this.Html.style.padding = this.Padding+"px";
 }
 
 Gwt.Gui.Frame.prototype.SetPaddingTop = function (PaddingTop)
 {
-	this.PaddingTop = PaddingTop;
-	this.Html.style.paddingTop = this.PaddingTop+"px";
+    this.PaddingTop = PaddingTop;
+    this.Html.style.paddingTop = this.PaddingTop+"px";
 }
 
 Gwt.Gui.Frame.prototype.SetPaddingBottom = function (PaddingBottom)
 {
-	this.PaddingBottom = PaddingBottom;
-	this.Html.style.paddingBottom = this.PaddingBottom+"px";
+    this.PaddingBottom = PaddingBottom;
+    this.Html.style.paddingBottom = this.PaddingBottom+"px";
 }
 
 Gwt.Gui.Frame.prototype.SetPaddingLeft = function (PaddingLeft)
 {
-	this.PaddingLeft = PaddingLeft;
-	this.Html.style.paddingLeft = this.PaddingLeft+"px";
+    this.PaddingLeft = PaddingLeft;
+    this.Html.style.paddingLeft = this.PaddingLeft+"px";
 }
 
 Gwt.Gui.Frame.prototype.SetPaddingRight = function (PaddingRight)
 {
-	this.PaddingRight = PaddingRight;
-	this.Html.style.paddingRight = this.PaddingRight+"px";
+    this.PaddingRight = PaddingRight;
+    this.Html.style.paddingRight = this.PaddingRight+"px";
 }
 
 Gwt.Gui.Frame.prototype.SetPositionType = function (PositionType)
 {
-	this.PositionType = PositionType;
-	this.Html.style.position = this.PositionType;
+    this.PositionType = PositionType;
+    this.Html.style.position = this.PositionType;
 }
 
 Gwt.Gui.Frame.prototype.SetOverflow = function (Overflow)
@@ -593,7 +614,7 @@ Gwt.Gui.Frame.prototype.SetExpand = function (Expand)
 	this.Expand = Expand;
 }
 
-Gwt.Gui.Frame.prototype.IsExpand = function ()
+Gwt.Gui.Frame.prototype.GetExpand = function ()
 {
 	return this.Expand;
 }
@@ -607,5 +628,17 @@ Gwt.Gui.Frame.prototype.SetOutLine = function (OutLine)
 Gwt.Gui.Frame.prototype.GetOutLine = function ()
 {
 	return this.OutLine;
+}
+
+Gwt.Gui.Frame.prototype.SetHExpand = function (value)
+{
+	if (typeof(value) !== "boolean")
+	{
+		throw new Gwt.Core.BooleanException();	
+	}
+	else
+	{
+		this.HExpand = value;
+	}
 }
 //Ends Gwt::Gui::Frame Class

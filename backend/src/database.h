@@ -11,5 +11,5 @@ int open_pool (void);
 int close_pool (void);
 Connection_T get_connection (void);
 
-sql_state init_database_system (void);
+//sql_state init_database_system (void);
 #endif
