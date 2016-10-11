@@ -1,5 +1,5 @@
 //##################################################################################################
-//Class Gwt::Gui::Button_sv_up_dl
+//Class Gwt::Gui::ButtonSvUpDl
 Gwt.Gui.ButtonSvUpDl = function ()
 {
     Gwt.Gui.Button.call (this, Gwt.Core.Contrib.Images+"appbar.cabinet.in.svg", "Guardar");
@@ -66,7 +66,7 @@ Gwt.Gui.ButtonSvUpDl.prototype.CtrlReset = function (enable_disable)
     }
 }
 
-Gwt.Gui.ButtonSvUpDl.prototype.set_update = function (enable_disable)
+Gwt.Gui.ButtonSvUpDl.prototype.SetUpdate = function (enable_disable)
 {
     this.Update = enable_disable;
     

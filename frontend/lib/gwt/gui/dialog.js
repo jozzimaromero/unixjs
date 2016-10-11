@@ -4,12 +4,20 @@ Gwt.Gui.Dialog = function (Parent)
     Gwt.Gui.Frame.call (this);
     
     this.DialogBox = null;
-    
+    this.IsOpen = null;
     this.InitDialog (Parent);
 }
 
 Gwt.Gui.Dialog.prototype = new Gwt.Gui.Frame ();
 Gwt.Gui.Dialog.prototype.constructor = Gwt.Gui.Dialog;
+
+Gwt.Gui.Dialog.prototype.FinalizeDialog = function ()
+{
+    this.DialogBox.FinalizeFrame ();
+    this.DialogBox = null;
+    
+    this.FinalizeFrame ();
+}
 
 Gwt.Gui.Dialog.prototype.InitDialog = function (Parent)
 {
@@ -38,6 +46,8 @@ Gwt.Gui.Dialog.prototype.InitDialog = function (Parent)
     this.DialogBox.SetZIndex (1000000);
     
     this.Add (this.DialogBox);
+    
+    this.IsOpen = false;
 }
 
 Gwt.Gui.Dialog.prototype.Open = function ()
@@ -47,9 +57,10 @@ Gwt.Gui.Dialog.prototype.Open = function ()
 
 Gwt.Gui.Dialog.prototype.Close = function ()
 {
-    this.DialogBox.FinalizeFrame ();
-    this.DialogBox = null;
-    this.FinalizeFrame ();
+    this.FinalizeDialog ();
 }
+
 //Ends Gwt::Gui::Dialog
 //##################################################################################################
+
+

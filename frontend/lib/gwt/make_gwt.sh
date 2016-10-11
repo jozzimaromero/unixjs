@@ -31,7 +31,7 @@ cat gui/button_on_off.js >> gwt.js
 cat gui/icon_control.js >> gwt.js
 cat gui/icon_entry.js >> gwt.js
 cat gui/icon_select_box.js >> gwt.js
-#cat gui/date.js >> gwt.js
+cat gui/date.js >> gwt.js
 
 
 

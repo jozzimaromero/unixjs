@@ -11,7 +11,7 @@ Gwt.Gui.Window.prototype.constructor = Gwt.Gui.Window;
 
 Gwt.Gui.Window.prototype.FinalizeWindow = function ()
 {
-	this.FinalizeFrame ();
+    this.FinalizeFrame ();
 }
 
 Gwt.Gui.Window.prototype.InitWindow = function ()
@@ -54,7 +54,7 @@ Gwt.Gui.Window.prototype.Open = function ()
 
 Gwt.Gui.Window.prototype.Close = function ()
 {
-	this.FinalizeWindow ();
+    this.FinalizeWindow ();
 }
 //Ends Gwt::Gui::Window
 //##################################################################################################

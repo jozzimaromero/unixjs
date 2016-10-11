@@ -24,7 +24,6 @@ Gwt.Gui.HBox.prototype.InitHBox = function (Margin)
 {
         this.SetClassName ("Gwt_Gui_HBox");
         this.SetDisplay (Gwt.Gui.Contrib.Display.Block);
-        this.SetHorizontalContainer (true);
 	
         this.Childs = [];
         this.MarginElements = typeof(Margin) === "undefined" ? 12 : Margin;
