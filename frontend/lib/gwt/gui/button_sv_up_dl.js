@@ -20,7 +20,7 @@ Gwt.Gui.ButtonSvUpDl.prototype.FinalizeButtonSvUpDl = function ()
 
 Gwt.Gui.ButtonSvUpDl.prototype.InitButtonSvUpDl = function ()
 {
-    this.SetWidth (90);
+    this.SetWidth (95);
     this.SetText ("Guardar");
     this.AddEvent (Gwt.Gui.Event.Mouse.Mousemove, this.CtrlSvUpDl.bind (this));
     this.AddEvent (Gwt.Gui.Event.Mouse.Mouseout, this.CtrlReset.bind (this));

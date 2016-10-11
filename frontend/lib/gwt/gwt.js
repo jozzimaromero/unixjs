@@ -1002,6 +1002,11 @@ Gwt.Gui.Frame.prototype.SetBorder = function (Border)
     this.Html.style.borderWidth = this.Border+"px";
 }
 
+Gwt.Gui.Frame.prototype.GetBorder = function ()
+{
+    return this.Border;
+}
+
 Gwt.Gui.Frame.prototype.SetBorderStyle = function (Style)
 {
     this.BorderStyle = Style;
@@ -1392,7 +1397,10 @@ Gwt.Gui.Dialog.prototype.constructor = Gwt.Gui.Dialog;
 
 Gwt.Gui.Dialog.prototype.FinalizeDialog = function ()
 {
-    this.DialogBox.FinalizeFrame ();
+    if(this.DialogBox !== null)
+    {
+        this.DialogBox.FinalizeFrame ();
+    }
     this.DialogBox = null;
     
     this.FinalizeFrame ();
@@ -1406,7 +1414,7 @@ Gwt.Gui.Dialog.prototype.InitDialog = function (Parent)
     this.AddEvent (Gwt.Gui.Event.Mouse.Click, this.Close.bind (this));
     this.SetSize (Gwt.Gui.SCREEN_DEVICE_WIDTH, Gwt.Gui.SCREEN_DEVICE_HEIGHT);
     this.SetPosition (Gwt.Gui.WIN_POS_TOP, Gwt.Gui.WIN_POS_LEFT);
-    var color = new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.DarkSlateGray);
+    var color = new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.DarkGrey);
     color.SetAlpha (0.75);
     this.SetBackgroundColor (color);
     this.SetZIndex (900000);
@@ -1482,9 +1490,11 @@ Gwt.Gui.Button.prototype.InitButton = function (Image, Text)
     this.AddEvent (Gwt.Gui.Event.Mouse.MouseOut, this.MouseOut.bind(this));
 	
     this.Image = new Gwt.Gui.Image (Image);
-    this.Image.SetSize (22, 22);
+    this.Image.SetSize (18, 18);
     this.Image.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
     this.Image.SetMarginRight (5);
+    this.Image.SetMarginLeft (5);
+    this.Image.SetMarginTop (2);
     this.Image.SetValign (Gwt.Gui.Contrib.Valign.Top);
 	
     this.Text = new Gwt.Gui.StaticText (Text);
@@ -1553,7 +1563,8 @@ Gwt.Gui.Entry.prototype.InitEntry = function (Placeholder)
 	this.Html.setAttribute ("type", "text");
 	this.SetClassName ("Gwt_Gui_Entry");
 	this.SetExpand (true);
-	this.SetPadding (3);
+        this.SetHeight (24);
+	this.SetPadding (0);
 	this.SetBorderRadius(5);
 	this.SetPlaceholder (Placeholder || "Entry text");
 	this.SetFontSize (11);
@@ -1702,10 +1713,10 @@ Gwt.Gui.Text.prototype.InitText = function (Placeholder)
 	this.SetHtml ("textarea");
 	this.SetClassName ("Gwt_Gui_Text");
 	this.SetExpand (true);
-	this.SetPadding (3);
+	this.SetPadding (0);
 	this.SetBorderRadius(5);
 	this.SetPlaceholder (Placeholder || "Text multi-line");
-	this.SetFontSize (10);
+	this.SetFontSize (11);
 	this.SetHeight (96);
 	this.SetAlign ();
 	this.SetMaxLength (185);
@@ -1963,7 +1974,7 @@ Gwt.Gui.Item.prototype.GetValue = function ()
 
 Gwt.Gui.Item.prototype.GetText = function ()
 {
-    return this.Text;
+    return this.Text.GetText();
 }
 
 Gwt.Gui.Item.prototype.MouseOver = function (event)
@@ -2040,7 +2051,7 @@ Gwt.Gui.SelectDialogBox.prototype.InitSelectDialogBox = function ()
 Gwt.Gui.SelectDialogBox.prototype.AddItem = function (item)
 {
 	item.SetWidth (this.Container.GetWidth ());
-	this.Container.SetHeight (this.Container.GetHeight () + 26);
+	this.Container.SetHeight (this.Container.GetHeight () + item.GetHeight());
 	this.Container.Add (item);
 	this.items++;
 }
@@ -2059,16 +2070,16 @@ Gwt.Gui.SelectDialogBox.prototype.EventScroll = function (event)
     
     if (itemsPlus > 0)
     {
-        maxScroll = -27*itemsPlus;
+        maxScroll = -24*itemsPlus;
     }
 	
     if (deltaY < 0 && isScroll && posTop < 0)
     {
-        posTop += 27;
+        posTop += 24;
     }
     else if (deltaY > 0 && isScroll && posTop > maxScroll)
     {
-	posTop -= 27;
+	posTop -= 24;
     }
     else
     {
@@ -2107,7 +2118,10 @@ Gwt.Gui.SelectBox.prototype.constructor = Gwt.Gui.SelectBox;
 
 Gwt.Gui.SelectBox.prototype.FinalizeSelectBox = function ()
 {
-    this.SelectDialogBox.FinalizeSelectDialogBox ();
+    if(this.SelectDialogBox !== null)
+    {
+        this.SelectDialogBox.FinalizeSelectDialogBox ();
+    }
     this.SelectDialogBox = null;
     
     this.StaticText = null;
@@ -2130,24 +2144,22 @@ Gwt.Gui.SelectBox.prototype.InitSelectBox = function (Placeholder, options)
     this.Add (this.StaticText);
 	
     this.Options = [];
-    this.Options [0] = new Gwt.Gui.Item (this.Placeholder, "");
-    this.Options [0].AddEvent (Gwt.Gui.Event.Mouse.Click, this.SetValue.bind(this, Event, this.Placeholder, ""));
-    this.Options [0].SetBackgroundImage (Gwt.Core.Contrib.Images+"check_item.svg");
-    this.Options [0].SetBackgroundRepeat (Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat);
-    this.Options [0].SetBackgroundPosition (Gwt.Gui.Contrib.BackgroundPosition.Right, Gwt.Gui.Contrib.BackgroundPosition.Center);
-	
+    
+    options = [{"text": this.Placeholder, "value": ""}].concat(options);
     for (var i = 0; i < options.length; i++)
     {
-	this.Options [i+1] = new Gwt.Gui.Item (options[i].text, options[i].value);
-	this.Options [i+1].AddEvent (Gwt.Gui.Event.Mouse.Click, this.SetValue.bind(this, Event, options[i].text, options[i].value));
+        if (i === 0)
+        {
+            this.Options [i] = new Gwt.Gui.Item (this.Placeholder, "");
+        }
+        else
+        {
+            this.Options [i] = new Gwt.Gui.Item (options[i].text, options[i].value);
+        }
+	this.Options [i].AddEvent (Gwt.Gui.Event.Mouse.Click, this.SetValueListener.bind(this, Event, options[i].text, options[i].value));
     }
     
-    this.SelectDialogBox = new Gwt.Gui.SelectDialogBox ();
-    for (var i = 0; i < this.Options.length; i++)
-    {
-        this.Options [i].Reset();
-        this.SelectDialogBox.AddItem (this.Options [i]);
-    }
+    this.SetValue("");
 }
 
 Gwt.Gui.SelectBox.prototype.ShowDialog = function (event)
@@ -2157,10 +2169,22 @@ Gwt.Gui.SelectBox.prototype.ShowDialog = function (event)
     {
         if (event.keyCode === Gwt.Gui.Event.Keyboard.KeyCodes.Enter)
 	{
+            this.SelectDialogBox = new Gwt.Gui.SelectDialogBox ();
+            for (var i = 0; i < this.Options.length; i++)
+            {
+                this.Options [i].Reset();
+                this.SelectDialogBox.AddItem (this.Options [i]);
+            }
             this.SelectDialogBox.Open ();
         }
         else if (event.type === Gwt.Gui.Event.Mouse.Click)
         {
+            this.SelectDialogBox = new Gwt.Gui.SelectDialogBox ();
+            for (var i = 0; i < this.Options.length; i++)
+            {
+                this.Options [i].Reset();
+                this.SelectDialogBox.AddItem (this.Options [i]);
+            }
             this.SelectDialogBox.Open ();
         }
     }
@@ -2172,18 +2196,18 @@ Gwt.Gui.SelectBox.prototype.SetText = function (Text)
     this.StaticText.SetText (this.Text);
 }
 
-Gwt.Gui.SelectBox.prototype.SetValue = function (Event, Text, Value)
+Gwt.Gui.SelectBox.prototype.SetValueListener = function (Event, Text, Value)
 {
-    this.SetText(Text);
-    this.Value=Value;
-	
     for (var i = 0; i < this.Options.length; i++)
     {
-	if(this.Options [i].GetValue () === this.Value)
+	if(this.Options [i].GetValue () === Value)
 	{
             this.Options [i].SetBackgroundImage (Gwt.Core.Contrib.Images+"check_item.svg");
             this.Options [i].SetBackgroundRepeat (Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat);
             this.Options [i].SetBackgroundPosition (Gwt.Gui.Contrib.BackgroundPosition.Right, Gwt.Gui.Contrib.BackgroundPosition.Center);
+            
+            this.SetText(Text);
+            this.Value=Value;
 	}
 	else
 	{
@@ -2192,7 +2216,7 @@ Gwt.Gui.SelectBox.prototype.SetValue = function (Event, Text, Value)
     }
 }
 
-Gwt.Gui.SelectBox.prototype.FindValue = function (value)
+Gwt.Gui.SelectBox.prototype.SetValue = function (value)
 {
     for (var i = 0; i < this.Options.length; i++)
     {
@@ -2201,10 +2225,9 @@ Gwt.Gui.SelectBox.prototype.FindValue = function (value)
             this.Options [i].SetBackgroundImage (Gwt.Core.Contrib.Images+"check_item.svg");
             this.Options [i].SetBackgroundRepeat (Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat);
             this.Options [i].SetBackgroundPosition (Gwt.Gui.Contrib.BackgroundPosition.Right, Gwt.Gui.Contrib.BackgroundPosition.Center);
-            
-            this.SetText(this.Options[i].Text);
-            this.Value=this.Options[i].Value;
-            break;
+
+            this.SetText(this.Options[i].GetText());
+            this.Value=this.Options[i].GetValue();
 	}
 	else
 	{
@@ -2212,9 +2235,10 @@ Gwt.Gui.SelectBox.prototype.FindValue = function (value)
 	}
     }
 }
-
 //Ends Gwt::Gui::Selectbox
 //##################################################################################################
+
+
 //################################################################################################
 //Class Gwt::Gui::Static_Text
 Gwt.Gui.StaticText = function (Text)
@@ -2240,6 +2264,8 @@ Gwt.Gui.StaticText.prototype.InitStaticText = function (Text)
 	this.SetText (this.Text);
         this.SetExpand (true);
 	this.SetFontSize (11);
+        this.SetHeight (22);
+        this.SetPaddingTop (2);
 	this.SetColor (new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.Azure));
 	//this.SetTextShadow (0, 0, 1, new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.DarkSlateGray));
 	this.SetCursor (Gwt.Gui.Contrib.Cursor.Default);
@@ -2267,7 +2293,7 @@ Gwt.Gui.StaticText.prototype.TextAlign = function (Value)
 
 Gwt.Gui.StaticText.prototype.GetText = function ()
 {
-	return this.Html.value;
+	return this.Text;
 }
 
 Gwt.Gui.StaticText.prototype.GetLength = function()
@@ -2387,7 +2413,7 @@ Gwt.Gui.VBox.prototype.Add = function (Element)
                     break;
 		
                 case Gwt.Gui.ALIGN_RIGHT:
-                    Element.SetMarginLeft (this.GetWidth() - Element.GetWidth());
+                    Element.SetMarginLeft (this.GetWidth() - (Element.GetWidth() + Element.GetBorder()*2));
                     break;
 		
                 default:
@@ -2466,11 +2492,11 @@ Gwt.Gui.Slider.prototype.InitSlider = function (Slots)
     this.Panel = new Gwt.Gui.Frame ();
     
     this.ArrowLeft = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"appbar.arrow.left.svg", "");
-    this.ArrowLeft.SetWidth (24);
+    this.ArrowLeft.SetWidth (28);
     this.ArrowLeft.AddEvent (Gwt.Gui.Event.Mouse.Click, this.SlideRight.bind (this));
     
     this.ArrowRight = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"appbar.arrow.right.svg", "");
-    this.ArrowRight.SetWidth (24);
+    this.ArrowRight.SetWidth (28);
     this.ArrowRight.AddEvent (Gwt.Gui.Event.Mouse.Click, this.SlideLeft.bind (this));
     
     this.Viewer = new Gwt.Gui.Frame ();
@@ -2685,7 +2711,7 @@ Gwt.Gui.ButtonSvUpDl.prototype.FinalizeButtonSvUpDl = function ()
 
 Gwt.Gui.ButtonSvUpDl.prototype.InitButtonSvUpDl = function ()
 {
-    this.SetWidth (90);
+    this.SetWidth (95);
     this.SetText ("Guardar");
     this.AddEvent (Gwt.Gui.Event.Mouse.Mousemove, this.CtrlSvUpDl.bind (this));
     this.AddEvent (Gwt.Gui.Event.Mouse.Mouseout, this.CtrlReset.bind (this));
@@ -2975,8 +3001,7 @@ Gwt.Gui.Date.prototype.InitDate = function (placeholder)
     {
         years_items.push ({"text": i, "value": i});
     }
-    var label_year = (placeholder || "Creación")+" (Año)";
-    this.year = new Gwt.Gui.SelectBox (label_year, years_items);
+    this.year = new Gwt.Gui.SelectBox ("Año", years_items);
     this.year.SetWidth (64);
     
     var months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -2985,7 +3010,7 @@ Gwt.Gui.Date.prototype.InitDate = function (placeholder)
     {
         months_items.push ({"text": months[i-1], "value": i});
     }
-    this.month = new Gwt.Gui.SelectBox ("De (Mes)", months_items);
+    this.month = new Gwt.Gui.SelectBox ("Mes", months_items);
     this.month.SetWidth (48);
     
     var days_items = [];
@@ -3001,11 +3026,11 @@ Gwt.Gui.Date.prototype.InitDate = function (placeholder)
         }
     }
     
-    this.day = new Gwt.Gui.SelectBox ("Fecha (Día)", days_items);
+    this.day = new Gwt.Gui.SelectBox ("Día", days_items);
     this.day.SetWidth (48);
 
     this.container = new Gwt.Gui.HBox (0);
-    this.container.SetSize (190,24);
+    this.container.SetSize (160,24);
 
     this.Add (this.container);
     this.container.Add (this.day);
@@ -3035,9 +3060,9 @@ Gwt.Gui.Date.prototype.SetDate = function (year, month, day)
     }
     else if (typeof(year)==="number", typeof(month)==="number", typeof(day)==="number")
     {
-        this.day.FindValue (day);
-        this.month.FindValue (month);
-        this.year.FindValue (year);
+        this.day.SetValue (day);
+        this.month.SetValue (month);
+        this.year.SetValue (year);
     }
 }
 

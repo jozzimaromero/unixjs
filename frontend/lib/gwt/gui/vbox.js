@@ -104,7 +104,7 @@ Gwt.Gui.VBox.prototype.Add = function (Element)
                     break;
 		
                 case Gwt.Gui.ALIGN_RIGHT:
-                    Element.SetMarginLeft (this.GetWidth() - Element.GetWidth());
+                    Element.SetMarginLeft (this.GetWidth() - (Element.GetWidth() + Element.GetBorder()*2));
                     break;
 		
                 default:

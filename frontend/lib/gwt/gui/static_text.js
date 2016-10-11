@@ -23,6 +23,8 @@ Gwt.Gui.StaticText.prototype.InitStaticText = function (Text)
 	this.SetText (this.Text);
         this.SetExpand (true);
 	this.SetFontSize (11);
+        this.SetHeight (22);
+        this.SetPaddingTop (2);
 	this.SetColor (new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.Azure));
 	//this.SetTextShadow (0, 0, 1, new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.DarkSlateGray));
 	this.SetCursor (Gwt.Gui.Contrib.Cursor.Default);
@@ -50,7 +52,7 @@ Gwt.Gui.StaticText.prototype.TextAlign = function (Value)
 
 Gwt.Gui.StaticText.prototype.GetText = function ()
 {
-	return this.Html.value;
+	return this.Text;
 }
 
 Gwt.Gui.StaticText.prototype.GetLength = function()

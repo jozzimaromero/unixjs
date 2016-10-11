@@ -19,10 +19,10 @@ Gwt.Gui.Text.prototype.InitText = function (Placeholder)
 	this.SetHtml ("textarea");
 	this.SetClassName ("Gwt_Gui_Text");
 	this.SetExpand (true);
-	this.SetPadding (3);
+	this.SetPadding (0);
 	this.SetBorderRadius(5);
 	this.SetPlaceholder (Placeholder || "Text multi-line");
-	this.SetFontSize (10);
+	this.SetFontSize (11);
 	this.SetHeight (96);
 	this.SetAlign ();
 	this.SetMaxLength (185);

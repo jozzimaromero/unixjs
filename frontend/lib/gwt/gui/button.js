@@ -37,9 +37,11 @@ Gwt.Gui.Button.prototype.InitButton = function (Image, Text)
     this.AddEvent (Gwt.Gui.Event.Mouse.MouseOut, this.MouseOut.bind(this));
 	
     this.Image = new Gwt.Gui.Image (Image);
-    this.Image.SetSize (22, 22);
+    this.Image.SetSize (18, 18);
     this.Image.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
     this.Image.SetMarginRight (5);
+    this.Image.SetMarginLeft (5);
+    this.Image.SetMarginTop (2);
     this.Image.SetValign (Gwt.Gui.Contrib.Valign.Top);
 	
     this.Text = new Gwt.Gui.StaticText (Text);

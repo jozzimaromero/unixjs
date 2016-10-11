@@ -35,8 +35,7 @@ Gwt.Gui.Date.prototype.InitDate = function (placeholder)
     {
         years_items.push ({"text": i, "value": i});
     }
-    var label_year = (placeholder || "Creación")+" (Año)";
-    this.year = new Gwt.Gui.SelectBox (label_year, years_items);
+    this.year = new Gwt.Gui.SelectBox ("Año", years_items);
     this.year.SetWidth (64);
     
     var months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -45,7 +44,7 @@ Gwt.Gui.Date.prototype.InitDate = function (placeholder)
     {
         months_items.push ({"text": months[i-1], "value": i});
     }
-    this.month = new Gwt.Gui.SelectBox ("De (Mes)", months_items);
+    this.month = new Gwt.Gui.SelectBox ("Mes", months_items);
     this.month.SetWidth (48);
     
     var days_items = [];
@@ -61,11 +60,11 @@ Gwt.Gui.Date.prototype.InitDate = function (placeholder)
         }
     }
     
-    this.day = new Gwt.Gui.SelectBox ("Fecha (Día)", days_items);
+    this.day = new Gwt.Gui.SelectBox ("Día", days_items);
     this.day.SetWidth (48);
 
     this.container = new Gwt.Gui.HBox (0);
-    this.container.SetSize (190,24);
+    this.container.SetSize (160,24);
 
     this.Add (this.container);
     this.container.Add (this.day);
@@ -95,9 +94,9 @@ Gwt.Gui.Date.prototype.SetDate = function (year, month, day)
     }
     else if (typeof(year)==="number", typeof(month)==="number", typeof(day)==="number")
     {
-        this.day.FindValue (day);
-        this.month.FindValue (month);
-        this.year.FindValue (year);
+        this.day.SetValue (day);
+        this.month.SetValue (month);
+        this.year.SetValue (year);
     }
 }
 

@@ -14,4 +14,4 @@ main.o: $(SOURCE)main.c
 	$(CC) $(CFLAGS) $(SOURCE)main.c
 		
 clean:
-	rm *o $(PROJECT)
+	rm *.o $(PROJECT)

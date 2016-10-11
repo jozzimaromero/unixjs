@@ -37,11 +37,11 @@ Gwt.Gui.Slider.prototype.InitSlider = function (Slots)
     this.Panel = new Gwt.Gui.Frame ();
     
     this.ArrowLeft = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"appbar.arrow.left.svg", "");
-    this.ArrowLeft.SetWidth (24);
+    this.ArrowLeft.SetWidth (28);
     this.ArrowLeft.AddEvent (Gwt.Gui.Event.Mouse.Click, this.SlideRight.bind (this));
     
     this.ArrowRight = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"appbar.arrow.right.svg", "");
-    this.ArrowRight.SetWidth (24);
+    this.ArrowRight.SetWidth (28);
     this.ArrowRight.AddEvent (Gwt.Gui.Event.Mouse.Click, this.SlideLeft.bind (this));
     
     this.Viewer = new Gwt.Gui.Frame ();

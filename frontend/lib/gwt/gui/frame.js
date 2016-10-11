@@ -354,6 +354,11 @@ Gwt.Gui.Frame.prototype.SetBorder = function (Border)
     this.Html.style.borderWidth = this.Border+"px";
 }
 
+Gwt.Gui.Frame.prototype.GetBorder = function ()
+{
+    return this.Border;
+}
+
 Gwt.Gui.Frame.prototype.SetBorderStyle = function (Style)
 {
     this.BorderStyle = Style;

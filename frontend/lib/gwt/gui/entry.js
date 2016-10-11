@@ -20,7 +20,8 @@ Gwt.Gui.Entry.prototype.InitEntry = function (Placeholder)
 	this.Html.setAttribute ("type", "text");
 	this.SetClassName ("Gwt_Gui_Entry");
 	this.SetExpand (true);
-	this.SetPadding (3);
+        this.SetHeight (24);
+	this.SetPadding (0);
 	this.SetBorderRadius(5);
 	this.SetPlaceholder (Placeholder || "Entry text");
 	this.SetFontSize (11);

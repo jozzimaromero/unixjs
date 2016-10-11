@@ -50,7 +50,7 @@ Gwt.Gui.Item.prototype.GetValue = function ()
 
 Gwt.Gui.Item.prototype.GetText = function ()
 {
-    return this.Text;
+    return this.Text.GetText();
 }
 
 Gwt.Gui.Item.prototype.MouseOver = function (event)
@@ -127,7 +127,7 @@ Gwt.Gui.SelectDialogBox.prototype.InitSelectDialogBox = function ()
 Gwt.Gui.SelectDialogBox.prototype.AddItem = function (item)
 {
 	item.SetWidth (this.Container.GetWidth ());
-	this.Container.SetHeight (this.Container.GetHeight () + 26);
+	this.Container.SetHeight (this.Container.GetHeight () + item.GetHeight());
 	this.Container.Add (item);
 	this.items++;
 }
@@ -146,16 +146,16 @@ Gwt.Gui.SelectDialogBox.prototype.EventScroll = function (event)
     
     if (itemsPlus > 0)
     {
-        maxScroll = -27*itemsPlus;
+        maxScroll = -24*itemsPlus;
     }
 	
     if (deltaY < 0 && isScroll && posTop < 0)
     {
-        posTop += 27;
+        posTop += 24;
     }
     else if (deltaY > 0 && isScroll && posTop > maxScroll)
     {
-	posTop -= 27;
+	posTop -= 24;
     }
     else
     {
@@ -194,7 +194,10 @@ Gwt.Gui.SelectBox.prototype.constructor = Gwt.Gui.SelectBox;
 
 Gwt.Gui.SelectBox.prototype.FinalizeSelectBox = function ()
 {
-    this.SelectDialogBox.FinalizeSelectDialogBox ();
+    if(this.SelectDialogBox !== null)
+    {
+        this.SelectDialogBox.FinalizeSelectDialogBox ();
+    }
     this.SelectDialogBox = null;
     
     this.StaticText = null;
@@ -217,24 +220,22 @@ Gwt.Gui.SelectBox.prototype.InitSelectBox = function (Placeholder, options)
     this.Add (this.StaticText);
 	
     this.Options = [];
-    this.Options [0] = new Gwt.Gui.Item (this.Placeholder, "");
-    this.Options [0].AddEvent (Gwt.Gui.Event.Mouse.Click, this.SetValue.bind(this, Event, this.Placeholder, ""));
-    this.Options [0].SetBackgroundImage (Gwt.Core.Contrib.Images+"check_item.svg");
-    this.Options [0].SetBackgroundRepeat (Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat);
-    this.Options [0].SetBackgroundPosition (Gwt.Gui.Contrib.BackgroundPosition.Right, Gwt.Gui.Contrib.BackgroundPosition.Center);
-	
+    
+    options = [{"text": this.Placeholder, "value": ""}].concat(options);
     for (var i = 0; i < options.length; i++)
     {
-	this.Options [i+1] = new Gwt.Gui.Item (options[i].text, options[i].value);
-	this.Options [i+1].AddEvent (Gwt.Gui.Event.Mouse.Click, this.SetValue.bind(this, Event, options[i].text, options[i].value));
+        if (i === 0)
+        {
+            this.Options [i] = new Gwt.Gui.Item (this.Placeholder, "");
+        }
+        else
+        {
+            this.Options [i] = new Gwt.Gui.Item (options[i].text, options[i].value);
+        }
+	this.Options [i].AddEvent (Gwt.Gui.Event.Mouse.Click, this.SetValueListener.bind(this, Event, options[i].text, options[i].value));
     }
     
-    this.SelectDialogBox = new Gwt.Gui.SelectDialogBox ();
-    for (var i = 0; i < this.Options.length; i++)
-    {
-        this.Options [i].Reset();
-        this.SelectDialogBox.AddItem (this.Options [i]);
-    }
+    this.SetValue("");
 }
 
 Gwt.Gui.SelectBox.prototype.ShowDialog = function (event)
@@ -244,10 +245,22 @@ Gwt.Gui.SelectBox.prototype.ShowDialog = function (event)
     {
         if (event.keyCode === Gwt.Gui.Event.Keyboard.KeyCodes.Enter)
 	{
+            this.SelectDialogBox = new Gwt.Gui.SelectDialogBox ();
+            for (var i = 0; i < this.Options.length; i++)
+            {
+                this.Options [i].Reset();
+                this.SelectDialogBox.AddItem (this.Options [i]);
+            }
             this.SelectDialogBox.Open ();
         }
         else if (event.type === Gwt.Gui.Event.Mouse.Click)
         {
+            this.SelectDialogBox = new Gwt.Gui.SelectDialogBox ();
+            for (var i = 0; i < this.Options.length; i++)
+            {
+                this.Options [i].Reset();
+                this.SelectDialogBox.AddItem (this.Options [i]);
+            }
             this.SelectDialogBox.Open ();
         }
     }
@@ -259,18 +272,18 @@ Gwt.Gui.SelectBox.prototype.SetText = function (Text)
     this.StaticText.SetText (this.Text);
 }
 
-Gwt.Gui.SelectBox.prototype.SetValue = function (Event, Text, Value)
+Gwt.Gui.SelectBox.prototype.SetValueListener = function (Event, Text, Value)
 {
-    this.SetText(Text);
-    this.Value=Value;
-	
     for (var i = 0; i < this.Options.length; i++)
     {
-	if(this.Options [i].GetValue () === this.Value)
+	if(this.Options [i].GetValue () === Value)
 	{
             this.Options [i].SetBackgroundImage (Gwt.Core.Contrib.Images+"check_item.svg");
             this.Options [i].SetBackgroundRepeat (Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat);
             this.Options [i].SetBackgroundPosition (Gwt.Gui.Contrib.BackgroundPosition.Right, Gwt.Gui.Contrib.BackgroundPosition.Center);
+            
+            this.SetText(Text);
+            this.Value=Value;
 	}
 	else
 	{
@@ -279,7 +292,7 @@ Gwt.Gui.SelectBox.prototype.SetValue = function (Event, Text, Value)
     }
 }
 
-Gwt.Gui.SelectBox.prototype.FindValue = function (value)
+Gwt.Gui.SelectBox.prototype.SetValue = function (value)
 {
     for (var i = 0; i < this.Options.length; i++)
     {
@@ -288,10 +301,9 @@ Gwt.Gui.SelectBox.prototype.FindValue = function (value)
             this.Options [i].SetBackgroundImage (Gwt.Core.Contrib.Images+"check_item.svg");
             this.Options [i].SetBackgroundRepeat (Gwt.Gui.Contrib.BackgroundRepeat.NoRepeat);
             this.Options [i].SetBackgroundPosition (Gwt.Gui.Contrib.BackgroundPosition.Right, Gwt.Gui.Contrib.BackgroundPosition.Center);
-            
-            this.SetText(this.Options[i].Text);
-            this.Value=this.Options[i].Value;
-            break;
+
+            this.SetText(this.Options[i].GetText());
+            this.Value=this.Options[i].GetValue();
 	}
 	else
 	{
@@ -299,6 +311,7 @@ Gwt.Gui.SelectBox.prototype.FindValue = function (value)
 	}
     }
 }
-
 //Ends Gwt::Gui::Selectbox
 //##################################################################################################
+
+
