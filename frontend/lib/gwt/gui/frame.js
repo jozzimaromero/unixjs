@@ -62,6 +62,7 @@ Gwt.Gui.Frame = function ()
     this.ZIndex = null;
     this.ClassName = null;
     this.Parent = null;
+    this.Childs = null;
 		
     this.InitFrame ();
 }
@@ -75,6 +76,7 @@ Gwt.Gui.Frame.prototype.InitFrame = function ()
     this.SetBorder (0);
     this.SetBorderStyle (Gwt.Gui.Contrib.BorderStyle.Solid);
     this.SetPosition (0, 0);
+    this.Childs = [];
 }
 
 Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
@@ -83,7 +85,7 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
     {
         try
         {
-            this.Html.parentNode.removeChild (this.Html);
+            this.GetHtml().parentNode.removeChild (this.GetHtml ());
         }
         catch (e)
         {
@@ -144,11 +146,32 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
     this.ZIndex = null;
     this.ClassName = null;
     this.Parent = null;
+    this.Childs = null;
 }
 
 Gwt.Gui.Frame.prototype.Add = function (Element)
 {
-    this.Html.appendChild (Element.Html);
+    this.Childs.push(Element);
+    this.GetHtml ().appendChild (Element.Html);
+}
+
+Gwt.Gui.Frame.prototype.Remove = function (Element)
+{
+    var elements = this.GetChilds();
+    for (var i = 0; i < elements.length; i++)
+    {
+        var tmp = elements[i];
+        if (tmp === Element)
+        {
+            this.GetHtml().removeChild (Element.GetHtml ());
+            elements.splice (i,1);
+        }
+    }
+}
+
+Gwt.Gui.Frame.prototype.GetChilds = function ()
+{
+	return this.Childs;
 }
 
 Gwt.Gui.Frame.prototype.AddEvent = function (Event, Callback)
@@ -173,10 +196,8 @@ Gwt.Gui.Frame.prototype.SetTabIndex = function (TabIndex)
 
 Gwt.Gui.Frame.prototype.SetSize = function (Width, Height)
 {
-    this.Width = Width;
-    this.Height = Height;
-    this.SetWidth(this.Width);
-    this.SetHeight(this.Height);
+    this.SetWidth(Width);
+    this.SetHeight(Height);
 }
 
 Gwt.Gui.Frame.prototype.SetWidth = function (Width)

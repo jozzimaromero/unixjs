@@ -4,7 +4,7 @@ var instance;
 
 function gusers () 
 {
-	Gwt.Gui.Window.call (this);
+	Gwt.Gui.Window.call (this, "Usuarios");
 	
 	this.SetSize (256, 420);
 	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);

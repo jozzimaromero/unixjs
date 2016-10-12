@@ -1,4 +1,4 @@
-//Class Gwt::Gui::Slider
+    //Class Gwt::Gui::Slider
 Gwt.Gui.Slider = function (Slots)
 {
     Gwt.Gui.Frame.call (this);

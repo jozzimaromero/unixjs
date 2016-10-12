@@ -116,7 +116,7 @@ Gwt.Gui.SelectDialogBox.prototype.InitSelectDialogBox = function ()
     var left = (this.DialogBox.GetWidth()-this.LayoutDialog.GetWidth())/2;
     this.LayoutDialog.SetPosition (top, left);
 	
-    this.Container = new Gwt.Gui.VBox (this.DialogBox, 3);
+    this.Container = new Gwt.Gui.VBox (3);
     this.Container.AddEvent (Gwt.Gui.Event.Mouse.Wheel, this.EventScroll.bind(this));
     this.Container.SetSize (this.LayoutDialog.GetWidth (), 0);
 	
@@ -127,9 +127,10 @@ Gwt.Gui.SelectDialogBox.prototype.InitSelectDialogBox = function ()
 Gwt.Gui.SelectDialogBox.prototype.AddItem = function (item)
 {
 	item.SetWidth (this.Container.GetWidth ());
-	this.Container.SetHeight (this.Container.GetHeight () + item.GetHeight());
-	this.Container.Add (item);
-	this.items++;
+        this.Container.SetHeight (this.Container.GetHeight () + item.GetHeight () + this.Container.GetMarginElements());
+        this.Container.Add (item);
+        this.items++;
+	
 }
 
 Gwt.Gui.SelectDialogBox.prototype.EventScroll = function (event)
@@ -140,22 +141,22 @@ Gwt.Gui.SelectDialogBox.prototype.EventScroll = function (event)
     var posLeft = this.Container.GetPositionLeft();
     
     var isScroll = this.Container.GetHeight () > this.LayoutDialog.GetHeight ();
-    var itemsPlus = this.items-10;
+    var itemsPlus = this.items-9;
     
     var maxScroll = 0;
     
     if (itemsPlus > 0)
     {
-        maxScroll = -24*itemsPlus;
+        maxScroll = -27*itemsPlus;
     }
 	
     if (deltaY < 0 && isScroll && posTop < 0)
     {
-        posTop += 24;
+        posTop += 27;
     }
     else if (deltaY > 0 && isScroll && posTop > maxScroll)
     {
-	posTop -= 24;
+	posTop -= 27;
     }
     else
     {

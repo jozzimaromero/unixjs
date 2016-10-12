@@ -153,35 +153,35 @@ var instance;
 
 function block ()
 {
-	Gwt.Gui.Window.call (this);
+    Gwt.Gui.Window.call (this, "Sessión Bloqueada");
 
-	this.SetSize (250,300);
-	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
+    this.SetSize (250,300);
+    this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
 	
-	var date = new Date ();
+    var date = new Date ();
 
-	var days = [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'];
-	var months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    var days = [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'];
+    var months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-	this.clock = new Gwt.Gui.Clock ();
-        
-	this.date = new Gwt.Gui.StaticText ("%d, %m %n, %y".replace ("%d", days[date.getDay ()]).replace ("%m", months[date.getMonth ()]).replace ("%n", date.getDate ()).replace ("%y", date.getFullYear ()));
-	this.date.SetWidth (180);
-	this.date.TextAlign ("center");
+    this.clock = new Gwt.Gui.Clock ();
+            
+    this.date = new Gwt.Gui.StaticText ("%d, %m %n, %y".replace ("%d", days[date.getDay ()]).replace ("%m", months[date.getMonth ()]).replace ("%n", date.getDate ()).replace ("%y", date.getFullYear ()));
+    this.date.SetWidth (180);
+    this.date.TextAlign ("center");
 	
-	this.unlock_button = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"document-decrypt.svg", "Desbloquear");
-	this.unlock_button.SetWidth (120);
+    this.unlock_button = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"document-decrypt.svg", "Desbloquear");
+    this.unlock_button.SetWidth (120);
 	
     this.layout = new Gwt.Gui.VBox();
     this.layout.SetAlignment(Gwt.Gui.ALIGN_CENTER);
 	
-	this.Add(this.layout);
+    this.Add(this.layout);
     this.SetBorderSpacing (12);
-	this.layout.Add(this.clock);
-	this.layout.Add(this.date);
-	this.layout.Add(this.unlock_button);
+    this.layout.Add(this.clock);
+    this.layout.Add(this.date);
+    this.layout.Add(this.unlock_button);
 		
-	this.unlock_button.AddEvent (Gwt.Gui.Event.Mouse.Click, this.unlock.bind(this));
+    this.unlock_button.AddEvent (Gwt.Gui.Event.Mouse.Click, this.unlock.bind(this));
 }
 
 block.prototype = new Gwt.Gui.Window ();
@@ -189,32 +189,32 @@ block.prototype.constructor = block;
 
 block.prototype.unlock = function ()
 {
-	unlock_session ();
+    unlock_session ();
 }
 	
 return new function ()
 {
-	this.open = function ()
-	{
-		if (instance === undefined)
-		{
-			instance = new block ();
-			instance.Open ();
-		}
-		else
-		{
-			console.log ("%app open".replace ("%app", instance.__proto__.constructor.name));
-		}
-	}
+    this.open = function ()
+    {
+        if (instance === undefined)
+        {
+            instance = new block ();
+            instance.Open ();
+        }
+        else
+        {
+            console.log ("%app open".replace ("%app", instance.__proto__.constructor.name));
+        }
+    }
 	
-	this.close = function ()
-	{
-		if (instance !== undefined)
-		{
-			instance.Close ();
-			instance = undefined;
-		} 
-	}
+    this.close = function ()
+    {
+        if (instance !== undefined)
+        {
+            instance.Close ();
+            instance = undefined;
+        } 
+    }
 }
 	
 })();
@@ -461,7 +461,7 @@ var instance;
 
 function gusers () 
 {
-	Gwt.Gui.Window.call (this);
+	Gwt.Gui.Window.call (this, "Usuarios");
 	
 	this.SetSize (256, 420);
 	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
@@ -702,10 +702,9 @@ cedeg = (function ()
 
     function cedeg()
     {
-        Gwt.Gui.Window.call (this);
+        Gwt.Gui.Window.call (this, "Comprobante De Egreso");
         
         this.layout = null;
-        this.title_label = null;
         this.number = null;
         this.city = null;
         this.date = null;
@@ -731,9 +730,6 @@ cedeg = (function ()
     {
         this.layout.FinalizeVBox ();
         this.layout = null;
-        
-        this.title_label.FinalizeStaticText ();
-        this.title_label = null;
         
         this.number.FinalizeEntry ();
         this.number = null;
@@ -788,12 +784,9 @@ cedeg = (function ()
         this.layout = new Gwt.Gui.VBox ();
         this.Add (this.layout);
         this.SetBorderSpacing (6);
-         
-        this.title_label = new Gwt.Gui.StaticText ("Comprobante De Egreso");
-        this.title_label.SetWidth (170);
      
         this.slider = new Gwt.Gui.Slider (3);
-        this.slider.SetSize (this.layout.GetWidth (), this.layout.GetHeight ()*0.8);
+        this.slider.SetSize (this.layout.GetWidth (), this.layout.GetHeight ()*0.85);
         this.slider.Setup ();
     
         this.save_button = new Gwt.Gui.ButtonSvUpDl ();
@@ -813,7 +806,6 @@ cedeg = (function ()
         this.records = [];
         this.update = false;
         
-        this.layout.Add (this.title_label);
         this.layout.Add (this.slider);
         this.layout.Add (this.save_button);
         

@@ -152,7 +152,9 @@ WIN_POS_RIGHT: "WIN_POS_RIGHT",
 WIN_POS_BOTTOM: "WIN_POS_BOTTOM",
 ALIGN_CENTER: "ALIGN_CENTER",
 ALIGN_LEFT: "ALIGN_LEFT",
+ALIGN_TOP: "ALIGN_TOP",
 ALIGN_RIGHT: "ALIGN_RIGHT",
+ALIGN_BOTTOM: "ALIGN_BOTTOM",
 };
 
 Gwt.Gui.Event =
@@ -737,6 +739,7 @@ Gwt.Gui.Frame = function ()
     this.ZIndex = null;
     this.ClassName = null;
     this.Parent = null;
+    this.Childs = null;
 		
     this.InitFrame ();
 }
@@ -750,6 +753,7 @@ Gwt.Gui.Frame.prototype.InitFrame = function ()
     this.SetBorder (0);
     this.SetBorderStyle (Gwt.Gui.Contrib.BorderStyle.Solid);
     this.SetPosition (0, 0);
+    this.Childs = [];
 }
 
 Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
@@ -758,7 +762,7 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
     {
         try
         {
-            this.Html.parentNode.removeChild (this.Html);
+            this.GetHtml().parentNode.removeChild (this.GetHtml ());
         }
         catch (e)
         {
@@ -819,11 +823,32 @@ Gwt.Gui.Frame.prototype.FinalizeFrame = function ()
     this.ZIndex = null;
     this.ClassName = null;
     this.Parent = null;
+    this.Childs = null;
 }
 
 Gwt.Gui.Frame.prototype.Add = function (Element)
 {
-    this.Html.appendChild (Element.Html);
+    this.Childs.push(Element);
+    this.GetHtml ().appendChild (Element.Html);
+}
+
+Gwt.Gui.Frame.prototype.Remove = function (Element)
+{
+    var elements = this.GetChilds();
+    for (var i = 0; i < elements.length; i++)
+    {
+        var tmp = elements[i];
+        if (tmp === Element)
+        {
+            this.GetHtml().removeChild (Element.GetHtml ());
+            elements.splice (i,1);
+        }
+    }
+}
+
+Gwt.Gui.Frame.prototype.GetChilds = function ()
+{
+	return this.Childs;
 }
 
 Gwt.Gui.Frame.prototype.AddEvent = function (Event, Callback)
@@ -848,10 +873,8 @@ Gwt.Gui.Frame.prototype.SetTabIndex = function (TabIndex)
 
 Gwt.Gui.Frame.prototype.SetSize = function (Width, Height)
 {
-    this.Width = Width;
-    this.Height = Height;
-    this.SetWidth(this.Width);
-    this.SetHeight(this.Height);
+    this.SetWidth(Width);
+    this.SetHeight(Height);
 }
 
 Gwt.Gui.Frame.prototype.SetWidth = function (Width)
@@ -1350,11 +1373,15 @@ Gwt.Gui.Frame.prototype.SetHExpand = function (value)
 
 
 //Class Gwt::Gui::Window
-Gwt.Gui.Window = function ()
+Gwt.Gui.Window = function (Title)
 {
-	Gwt.Gui.Frame.call (this);
-	
-	this.InitWindow ();
+    Gwt.Gui.Frame.call (this);
+    
+    this.TitleBar = null;
+    this.Body = null;
+    this.Title = null;
+    
+    this.InitWindow (Title);
 }
 
 Gwt.Gui.Window.prototype = new Gwt.Gui.Frame ();
@@ -1362,50 +1389,113 @@ Gwt.Gui.Window.prototype.constructor = Gwt.Gui.Window;
 
 Gwt.Gui.Window.prototype.FinalizeWindow = function ()
 {
+    this.TitleBar.FinalizeFrame();
+    this.TitleBar = null;
+    
+    this.Body.FinalizeFrame();
+    this.Body = null;
+    
+    this.Title.FinalizeStaticText();
+    this.Title = null;
+    
     this.FinalizeFrame ();
 }
 
-Gwt.Gui.Window.prototype.InitWindow = function ()
+Gwt.Gui.Window.prototype.InitWindow = function (Title)
 {
-	this.SetClassName ("Gwt_Gui_Window");
-	this.SetBackgroundColor (new Gwt.Gui.Contrib.Color (25,25,25,0.3));
-	this.SetBackgroundSize (Gwt.Gui.Contrib.BackgroundSize.Cover);
-	this.SetBoxShadow (0, 0, 10, 2, new Gwt.Gui.Contrib.Color (102,205,102,0.3));
-	this.SetBorder (0);
-	var Color = new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.White);
-	Color.SetAlpha (0.5);
-	this.SetBorderColor (Color);
-	this.SetBorderStyle (Gwt.Gui.Contrib.BorderStyle.Solid);
-	this.SetBorder (1);
-	this.SetBorderRadius (5);
-	this.SetPositionType (Gwt.Gui.Contrib.PositionType.Absolute);
-	this.SetSize (256, 256);
-	this.SetDisplay (Gwt.Gui.Contrib.Display.Block);
-	var Left = (Math.random () * Gwt.Gui.SCREEN_DEVICE_WIDTH)-this.GetWidth ();
-	var Top = (Math.random () * Gwt.Gui.SCREEN_DEVICE_HEIGHT)-this.GetHeight ();
-	if (Left < 0) Left=0;
-	if (Top < 0) Top=0;
-	this.SetPosition (Left, top);
+    this.TitleBar = new Gwt.Gui.VBox (0);
+    this.Body = new Gwt.Gui.Frame ();
+    this.Title = new Gwt.Gui.StaticText(Title || "Default Window Title");
+    
+    this.SetClassName ("Gwt_Gui_Window");
+    this.SetBackgroundColor (new Gwt.Gui.Contrib.Color (25,25,25,0.3));
+    this.SetBackgroundSize (Gwt.Gui.Contrib.BackgroundSize.Cover);
+    this.SetBoxShadow (0, 0, 10, 2, new Gwt.Gui.Contrib.Color (102,205,102,0.3));
+    this.SetBorder (0);
+    var Color = new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.White);
+    Color.SetAlpha (0.5);
+    this.SetBorderColor (Color);
+    this.SetBorderStyle (Gwt.Gui.Contrib.BorderStyle.Solid);
+    this.SetBorder (1);
+    this.SetBorderRadius (5);
+    this.SetPositionType (Gwt.Gui.Contrib.PositionType.Absolute);
+    this.SetSize (256, 256);
+    this.SetDisplay (Gwt.Gui.Contrib.Display.Block);
+    var Left = (Math.random () * Gwt.Gui.SCREEN_DEVICE_WIDTH)-this.GetWidth ();
+    var Top = (Math.random () * Gwt.Gui.SCREEN_DEVICE_HEIGHT)-this.GetHeight ();
+    if (Left < 0) Left=0;
+    if (Top < 0) Top=0;
+    this.SetPosition (Left, top);
+    
+    
+    this.TitleBar.SetSize (this.GetWidth(), 32);
+    this.TitleBar.SetBackgroundColor (new Gwt.Gui.Contrib.Color (25,25,25,0.3));
+    this.TitleBar.SetBackgroundSize (Gwt.Gui.Contrib.BackgroundSize.Cover);
+    this.RootAdd (this.TitleBar);
+    
+    this.Title.SetTextAlignment (Gwt.Gui.Contrib.TextAlign.Center);
+    this.TitleBar.Add (this.Title);
+    
+    this.Body.SetSize (this.GetWidth(), this.GetHeight () - 32);
+    this.RootAdd (this.Body);
+}
+
+Gwt.Gui.Window.prototype.RootAdd = function (Element)
+{
+    this.GetChilds().push (Element);
+    this.GetHtml ().appendChild (Element.Html);
+}
+
+Gwt.Gui.Window.prototype.Add = function (Element)
+{
+    this.Body.Add (Element);
 }
 
 Gwt.Gui.Window.prototype.SetBorderSpacing = function (Border)
 {
-	var Border_ = Border*2;
-	this.layout.SetWidth (this.GetWidth ()-Border_);
-	this.layout.SetHeight (this.GetHeight ()-Border_);
-	var left = (this.GetWidth ()-(this.GetWidth ()-Border_))/2;
-	var top = ((this.GetHeight ()-(this.GetHeight ()-Border_))/2);
-	this.layout.SetPosition (left, top);
+    var Border_ = Border*2;
+    this.layout.SetWidth (this.Body.GetWidth () - Border_);
+    this.layout.SetHeight (this.Body.GetHeight () - Border_);
+    var left = (this.Body.GetWidth () - (this.Body.GetWidth () - Border_))/2;
+    var top = ((this.Body.GetHeight () - (this.Body.GetHeight () - Border_))/2);
+    this.layout.SetPosition (left, top);
 }
 
 Gwt.Gui.Window.prototype.Open = function ()
 {
-	desktop.show (this);
+    desktop.show (this);
 }
 
 Gwt.Gui.Window.prototype.Close = function ()
 {
     this.FinalizeWindow ();
+}
+
+Gwt.Gui.Window.prototype.SetSize = function (Width, Height)
+{
+    this.SetWidth (Width);
+    this.SetHeight (Height);
+}
+
+Gwt.Gui.Window.prototype.SetWidth = function (Width)
+{
+    this.Width = Width;
+    this.SetMaxWidth (this.Width);
+    this.SetMinWidth (this.Width);
+    this.Html.style.width = this.Width+"px";
+    
+    this.TitleBar.SetWidth (this.GetWidth ());
+    this.Body.SetWidth (this.GetWidth());
+}
+
+Gwt.Gui.Window.prototype.SetHeight = function (Height)
+{
+    this.Height = Height;
+    this.SetMaxHeight (this.Height);
+    this.SetMinHeight (this.Height);
+    this.Html.style.height = this.Height+"px";
+    
+    this.Body.SetHeight (this.GetHeight () - 32);
 }
 //Ends Gwt::Gui::Window
 //##################################################################################################
@@ -1817,8 +1907,8 @@ Gwt.Gui.HBox = function (Margin)
 {
         Gwt.Gui.Frame.call (this);
 	
-        this.Childs = null;
         this.MarginElements = null;
+        this.Alignment = null;
 	
         this.InitHBox (Margin);
 }
@@ -1828,8 +1918,8 @@ Gwt.Gui.HBox.prototype.constructor = Gwt.Gui.HBox
 
 Gwt.Gui.HBox.prototype.FinalizeHbox = function ()
 {
-        this.Childs = null;
         this.MarginElements = null;
+        this.Alignment = null;
         
         this.FinalizeFrame ();
 }
@@ -1838,14 +1928,9 @@ Gwt.Gui.HBox.prototype.InitHBox = function (Margin)
 {
         this.SetClassName ("Gwt_Gui_HBox");
         this.SetDisplay (Gwt.Gui.Contrib.Display.Block);
-	
-        this.Childs = [];
+	this.SetAlignment (Gwt.Gui.ALIGN_TOP);
+        
         this.MarginElements = typeof(Margin) === "undefined" ? 12 : Margin;
-}
-
-Gwt.Gui.HBox.prototype.GetChilds = function ()
-{
-	return this.Childs;
 }
 
 Gwt.Gui.HBox.prototype.GetMarginElements = function ()
@@ -1855,39 +1940,173 @@ Gwt.Gui.HBox.prototype.GetMarginElements = function ()
 
 Gwt.Gui.HBox.prototype.Add = function (Element)
 {
-	this.GetChilds ().push (Element);
-        this.GetHtml ().appendChild (Element.GetHtml ());
+    this.GetChilds ().push (Element);
+    this.GetHtml ().appendChild (Element.GetHtml ());
         
-        if (Element instanceof Gwt.Gui.VBox)
+    if (Element instanceof Gwt.Gui.VBox)
+    {
+        var vboxs = [];
+        for (var i = 0; i < this.GetChilds ().length; i++)
         {
-                var vboxs = [];
-                for (var i = 0; i < this.GetChilds ().length; i++)
-                {
-                        if (this.GetChilds ()[i] instanceof Gwt.Gui.VBox)
-                        {
-                                vboxs.push (this.GetChilds ()[i]);
-                        }
-                }
-
-                for (var j = 0; j < vboxs.length; j++)
-                {
-                        vboxs[j].SetWidth (this.GetWidth () / vboxs.length);
-                        vboxs[j].SetHeight (this.GetHeight ());
-                }
+            if (this.GetChilds ()[i] instanceof Gwt.Gui.VBox)
+            {
+                vboxs.push (this.GetChilds ()[i]);
+            }
         }
-	else
-	{
-		Element.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
+
+        for (var j = 0; j < vboxs.length; j++)
+        {
+            vboxs[j].SetWidth (this.GetWidth () / vboxs.length);
+            vboxs[j].SetHeight (this.GetHeight ());
+        }
+    }
+    else
+    {
+        Element.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
 		
-		if (Element.GetHtml () === this.GetHtml ().firstChild)
-		{
-			Element.SetMargin (0);
-		}
-		else if (Element.GetHtml () === this.GetHtml ().lastChild)
-		{
-			Element.SetMarginLeft (this.GetMarginElements ());
-		}
-	}
+        if (Element.GetHtml () === this.GetHtml ().firstChild)
+        {
+            Element.SetMargin (0);
+        }
+        
+        else if (Element.GetHtml () === this.GetHtml ().lastChild)
+        {
+            Element.SetMarginLeft (this.GetMarginElements ());
+        }
+        
+        if (Element.GetExpand ()) Element.SetHeight (this.GetHeight ()*0.99);
+        
+        if (!Element.GetExpand ())
+        {
+            switch (this.GetAlignment ())
+            {
+                case Gwt.Gui.ALIGN_TOP:
+                    Element.SetMarginTop (0);
+                    break;
+		   
+                case Gwt.Gui.ALIGN_CENTER:
+                    Element.SetMarginTop ((this.GetHeight () - Element.GetHeight ())/2);
+                    break;
+		
+                case Gwt.Gui.ALIGN_BOTTOM:
+                    Element.SetMarginTop (this.GetHeight () - (Element.GetHeight () + Element.GetBorder()*2));
+                    break;
+		
+                default:
+                    throw TypeError("Invalid HBox Alignment Value");
+                    break;
+            }
+        }       
+    }
+}
+
+Gwt.Gui.HBox.prototype.SetAlignment = function(Alignment)
+{
+    switch(Alignment)
+    {
+	case Gwt.Gui.ALIGN_CENTER:
+	    this.Alignment = Gwt.Gui.ALIGN_CENTER;
+	    break;
+	
+	case Gwt.Gui.ALIGN_TOP:
+	    this.Alignment = Gwt.Gui.ALIGN_TOP;
+	    break;
+	
+	case Gwt.Gui.ALIGN_BOTTOM:
+	    this.Alignment = Gwt.Gui.ALIGN_BOTTOM;
+	    break;
+	
+	default:
+	    throw TypeError("Invalid HBox Alignment Value");
+	    break;
+    }
+}
+
+Gwt.Gui.HBox.prototype.GetAlignment = function()
+{
+	return this.Alignment;
+}
+
+Gwt.Gui.HBox.prototype.SetSize = function (Width, Height)
+{
+    this.SetWidth(Width);
+    this.SetHeight(Height);
+}
+
+Gwt.Gui.HBox.prototype.SetWidth = function (Width)
+{
+    this.Width = Width;
+    this.SetMaxWidth (this.Width);
+    this.SetMinWidth (this.Width);
+    this.Html.style.width = this.Width+"px";
+    
+    var elements = this.GetChilds ();
+    var vboxs = [];
+    var others = [];
+    
+    for (var i = 0; i < elements.length; i++)
+    {
+        var tmp = elements[i];
+        if (tmp instanceof Gwt.Gui.VBox)
+        {
+            vboxs.push (tmp);
+        }
+        else
+        {
+            others.push (tmp);
+        }
+    }
+    
+    var SpaceOcuped = 0;
+    for (var k = 0; k < others.length; k++)
+    {
+        var tmp = others[k];
+        SpaceOcuped += tmp.GetWidth ();
+    }
+            
+    for (var j = 0; j < vboxs.length; j++)
+    {
+        var tmp = vboxs[j];
+        tmp.SetWidth (((this.GetWidth () - SpaceOcuped) / vboxs.length));
+    }
+}
+
+Gwt.Gui.HBox.prototype.SetHeight = function (Height)
+{
+    this.Height = Height;
+    this.SetMaxHeight (this.Height);
+    this.SetMinHeight (this.Height);
+    this.Html.style.height = this.Height+"px";
+    
+    var elements = this.GetChilds ();
+    for (var i = 0; i < elements.length; i++)
+    {
+        var tmp = elements[i];
+        
+        if (tmp.GetExpand ()) tmp.SetHeight (this.GetHeight ()*0.99);
+		
+        if (!tmp.GetExpand ())
+        {
+            switch (this.GetAlignment ())
+            {
+                case Gwt.Gui.ALIGN_TOP:
+                    tmp.SetMarginTop (0);
+                    break;
+                        
+                case Gwt.Gui.ALIGN_CENTER:
+                    tmp.SetMarginTop ((this.GetHeight () - tmp.GetHeight ())/2);
+                    break;
+                        
+                case Gwt.Gui.ALIGN_RIGHT:
+                    tmp.SetMarginTop (this.GetHeight() - (tmp.GetHeight () + tmp.GetBorder()*2));
+                    break;
+                        
+                default:
+                    throw TypeError("Invalid HBox Alignment Value");
+                    break;
+            }
+        }
+    }
 }
 //Ends Gwt::Gui::HBox
 //##################################################################################################
@@ -2067,7 +2286,7 @@ Gwt.Gui.SelectDialogBox.prototype.InitSelectDialogBox = function ()
     var left = (this.DialogBox.GetWidth()-this.LayoutDialog.GetWidth())/2;
     this.LayoutDialog.SetPosition (top, left);
 	
-    this.Container = new Gwt.Gui.VBox (this.DialogBox, 3);
+    this.Container = new Gwt.Gui.VBox (3);
     this.Container.AddEvent (Gwt.Gui.Event.Mouse.Wheel, this.EventScroll.bind(this));
     this.Container.SetSize (this.LayoutDialog.GetWidth (), 0);
 	
@@ -2078,9 +2297,10 @@ Gwt.Gui.SelectDialogBox.prototype.InitSelectDialogBox = function ()
 Gwt.Gui.SelectDialogBox.prototype.AddItem = function (item)
 {
 	item.SetWidth (this.Container.GetWidth ());
-	this.Container.SetHeight (this.Container.GetHeight () + item.GetHeight());
-	this.Container.Add (item);
-	this.items++;
+        this.Container.SetHeight (this.Container.GetHeight () + item.GetHeight () + this.Container.GetMarginElements());
+        this.Container.Add (item);
+        this.items++;
+	
 }
 
 Gwt.Gui.SelectDialogBox.prototype.EventScroll = function (event)
@@ -2091,22 +2311,22 @@ Gwt.Gui.SelectDialogBox.prototype.EventScroll = function (event)
     var posLeft = this.Container.GetPositionLeft();
     
     var isScroll = this.Container.GetHeight () > this.LayoutDialog.GetHeight ();
-    var itemsPlus = this.items-10;
+    var itemsPlus = this.items-9;
     
     var maxScroll = 0;
     
     if (itemsPlus > 0)
     {
-        maxScroll = -24*itemsPlus;
+        maxScroll = -27*itemsPlus;
     }
 	
     if (deltaY < 0 && isScroll && posTop < 0)
     {
-        posTop += 24;
+        posTop += 27;
     }
     else if (deltaY > 0 && isScroll && posTop > maxScroll)
     {
-	posTop -= 24;
+	posTop -= 27;
     }
     else
     {
@@ -2308,13 +2528,25 @@ Gwt.Gui.StaticText.prototype.SetText = function (Text)
 
 Gwt.Gui.StaticText.prototype.TextAlign = function (Value)
 {
-	if (Value == "left" || Value == "center" || Value == "right" || Value == "justify")
+	if (Value === Gwt.Gui.Contrib.TextAlign.Left || Value === Gwt.Gui.Contrib.TextAlign.Center || Value === Gwt.Gui.Contrib.TextAlign.Right || Value === Gwt.Gui.Contrib.TextAlign.Justify)
 	{
 		this.Html.style.textAlign = Value;
 	}
 	else
 	{
-		console.log ("Align invalid");
+		throw TypeError("Invalid Text Alignment Value");
+	}
+}
+
+Gwt.Gui.StaticText.prototype.SetTextAlignment = function (Value)
+{
+	if (Value === Gwt.Gui.Contrib.TextAlign.Left || Value === Gwt.Gui.Contrib.TextAlign.Center || Value === Gwt.Gui.Contrib.TextAlign.Right || Value === Gwt.Gui.Contrib.TextAlign.Justify)
+	{
+		this.Html.style.textAlign = Value;
+	}
+	else
+	{
+		throw TypeError("Invalid Text Alignment Value");
 	}
 }
 
@@ -2340,7 +2572,6 @@ Gwt.Gui.VBox = function (Margin)
 {
 	Gwt.Gui.Frame.call (this);
 	
-	this.Childs = null;
 	this.MarginElements = null;
 	this.Alignment = null;
 	
@@ -2352,7 +2583,6 @@ Gwt.Gui.VBox.prototype.constructor = Gwt.Gui.VBox;
 
 Gwt.Gui.VBox.prototype.FinalizeVBox = function ()
 {
-	this.Childs = null;
 	this.MarginElements = null;
 	this.Alignment = null;
 	
@@ -2365,13 +2595,7 @@ Gwt.Gui.VBox.prototype.InitVBox = function (Margin)
 	this.SetDisplay (Gwt.Gui.Contrib.Display.InlineBlock);
 	this.SetAlignment (Gwt.Gui.ALIGN_LEFT);
 	
-	this.Childs = [];
 	this.MarginElements = typeof(Margin) === "undefined" ? 12 : Margin;
-}
-
-Gwt.Gui.VBox.prototype.GetChilds = function ()
-{
-	return this.Childs;
 }
 
 Gwt.Gui.VBox.prototype.GetMarginElements = function ()
@@ -2418,14 +2642,15 @@ Gwt.Gui.VBox.prototype.Add = function (Element)
 		
         if (Element.GetHtml () === this.GetHtml ().firstChild)
         {
-            Element.SetMargin (0);
+            Element.SetMarginTop (0);
         }
+        
         else if (Element.GetHtml () === this.GetHtml ().lastChild)
         {
             Element.SetMarginTop (this.GetMarginElements ());
         }
 		
-        if (Element.GetExpand ()) Element.SetWidth(this.GetWidth()*0.99);
+        if (Element.GetExpand ()) Element.SetWidth (this.GetWidth ()*0.99);
 		
         if (!Element.GetExpand ())
         {
@@ -2444,7 +2669,7 @@ Gwt.Gui.VBox.prototype.Add = function (Element)
                     break;
 		
                 default:
-                    console.log("imposible set alignment in vbox.");
+                    throw TypeError("Invalid VBox Alignment Value");
                     break;
             }
         }
@@ -2468,7 +2693,7 @@ Gwt.Gui.VBox.prototype.SetAlignment = function(Alignment)
 	    break;
 	
 	default:
-	    console.log("Alignment not valid in vbox.");
+	    throw TypeError("Invalid VBox Alignment Value");
 	    break;
     }
 }
@@ -2477,10 +2702,93 @@ Gwt.Gui.VBox.prototype.GetAlignment = function()
 {
 	return this.Alignment;
 }
+
+Gwt.Gui.VBox.prototype.SetSize = function (Width, Height)
+{
+    this.SetWidth(Width);
+    this.SetHeight(Height);
+}
+
+Gwt.Gui.VBox.prototype.SetWidth = function (Width)
+{
+    this.Width = Width;
+    this.SetMaxWidth (this.Width);
+    this.SetMinWidth (this.Width);
+    this.Html.style.width = this.Width+"px";
+    
+    var elements = this.GetChilds ();
+    
+    for (var i = 0; i < elements.length; i++)
+    {
+        var tmp = elements[i];
+        
+        if (tmp.GetExpand ()) tmp.SetWidth (this.GetWidth ()*0.99);
+		
+        if (!tmp.GetExpand ())
+        {
+            switch (this.GetAlignment ())
+            {
+                case Gwt.Gui.ALIGN_LEFT:
+                    tmp.SetMarginLeft (0);
+                    break;
+                        
+                case Gwt.Gui.ALIGN_CENTER:
+                    tmp.SetMarginLeft ((this.GetWidth() - tmp.GetWidth())/2);
+                    break;
+                        
+                case Gwt.Gui.ALIGN_RIGHT:
+                    tmp.SetMarginLeft (this.GetWidth() - (tmp.GetWidth() + tmp.GetBorder()*2));
+                    break;
+                        
+                default:
+                    throw TypeError("Invalid VBox Alignment Value");
+                    break;
+            }
+        }
+    }
+}
+
+Gwt.Gui.VBox.prototype.SetHeight = function (Height)
+{
+    this.Height = Height;
+    this.SetMaxHeight (this.Height);
+    this.SetMinHeight (this.Height);
+    this.Html.style.height = this.Height+"px";
+    
+    var elements = this.GetChilds ();
+    var hboxs = [];
+    var others = [];
+    
+    for (var i = 0; i < elements.length; i++)
+    {
+        var tmp = elements[i];
+        if (tmp instanceof Gwt.Gui.HBox)
+        {
+            hboxs.push (tmp);
+        }
+        else
+        {
+            others.push (tmp);
+        }
+    }
+    
+    var SpaceOcuped = 0;
+    for (var k = 0; k < others.length; k++)
+    {
+        var tmp = others[k];
+        SpaceOcuped += tmp.GetHeight();
+    }
+            
+    for (var j = 0; j < hboxs.length; j++)
+    {
+        var tmp = hboxs[j];
+        tmp.SetHeight (((this.GetHeight () - SpaceOcuped) / hboxs.length));
+    }
+}
 //Ends Gwt::Gui::VBox
 //##################################################################################################
 
-//Class Gwt::Gui::Slider
+    //Class Gwt::Gui::Slider
 Gwt.Gui.Slider = function (Slots)
 {
     Gwt.Gui.Frame.call (this);
@@ -4183,35 +4491,35 @@ var instance;
 
 function block ()
 {
-	Gwt.Gui.Window.call (this);
+    Gwt.Gui.Window.call (this, "Sessión Bloqueada");
 
-	this.SetSize (250,300);
-	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
+    this.SetSize (250,300);
+    this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
 	
-	var date = new Date ();
+    var date = new Date ();
 
-	var days = [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'];
-	var months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    var days = [ 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'];
+    var months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-	this.clock = new Gwt.Gui.Clock ();
-        
-	this.date = new Gwt.Gui.StaticText ("%d, %m %n, %y".replace ("%d", days[date.getDay ()]).replace ("%m", months[date.getMonth ()]).replace ("%n", date.getDate ()).replace ("%y", date.getFullYear ()));
-	this.date.SetWidth (180);
-	this.date.TextAlign ("center");
+    this.clock = new Gwt.Gui.Clock ();
+            
+    this.date = new Gwt.Gui.StaticText ("%d, %m %n, %y".replace ("%d", days[date.getDay ()]).replace ("%m", months[date.getMonth ()]).replace ("%n", date.getDate ()).replace ("%y", date.getFullYear ()));
+    this.date.SetWidth (180);
+    this.date.TextAlign ("center");
 	
-	this.unlock_button = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"document-decrypt.svg", "Desbloquear");
-	this.unlock_button.SetWidth (120);
+    this.unlock_button = new Gwt.Gui.Button (Gwt.Core.Contrib.Images+"document-decrypt.svg", "Desbloquear");
+    this.unlock_button.SetWidth (120);
 	
     this.layout = new Gwt.Gui.VBox();
     this.layout.SetAlignment(Gwt.Gui.ALIGN_CENTER);
 	
-	this.Add(this.layout);
+    this.Add(this.layout);
     this.SetBorderSpacing (12);
-	this.layout.Add(this.clock);
-	this.layout.Add(this.date);
-	this.layout.Add(this.unlock_button);
+    this.layout.Add(this.clock);
+    this.layout.Add(this.date);
+    this.layout.Add(this.unlock_button);
 		
-	this.unlock_button.AddEvent (Gwt.Gui.Event.Mouse.Click, this.unlock.bind(this));
+    this.unlock_button.AddEvent (Gwt.Gui.Event.Mouse.Click, this.unlock.bind(this));
 }
 
 block.prototype = new Gwt.Gui.Window ();
@@ -4219,32 +4527,32 @@ block.prototype.constructor = block;
 
 block.prototype.unlock = function ()
 {
-	unlock_session ();
+    unlock_session ();
 }
 	
 return new function ()
 {
-	this.open = function ()
-	{
-		if (instance === undefined)
-		{
-			instance = new block ();
-			instance.Open ();
-		}
-		else
-		{
-			console.log ("%app open".replace ("%app", instance.__proto__.constructor.name));
-		}
-	}
+    this.open = function ()
+    {
+        if (instance === undefined)
+        {
+            instance = new block ();
+            instance.Open ();
+        }
+        else
+        {
+            console.log ("%app open".replace ("%app", instance.__proto__.constructor.name));
+        }
+    }
 	
-	this.close = function ()
-	{
-		if (instance !== undefined)
-		{
-			instance.Close ();
-			instance = undefined;
-		} 
-	}
+    this.close = function ()
+    {
+        if (instance !== undefined)
+        {
+            instance.Close ();
+            instance = undefined;
+        } 
+    }
 }
 	
 })();
@@ -4491,7 +4799,7 @@ var instance;
 
 function gusers () 
 {
-	Gwt.Gui.Window.call (this);
+	Gwt.Gui.Window.call (this, "Usuarios");
 	
 	this.SetSize (256, 420);
 	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
@@ -4732,10 +5040,9 @@ cedeg = (function ()
 
     function cedeg()
     {
-        Gwt.Gui.Window.call (this);
+        Gwt.Gui.Window.call (this, "Comprobante De Egreso");
         
         this.layout = null;
-        this.title_label = null;
         this.number = null;
         this.city = null;
         this.date = null;
@@ -4761,9 +5068,6 @@ cedeg = (function ()
     {
         this.layout.FinalizeVBox ();
         this.layout = null;
-        
-        this.title_label.FinalizeStaticText ();
-        this.title_label = null;
         
         this.number.FinalizeEntry ();
         this.number = null;
@@ -4818,12 +5122,9 @@ cedeg = (function ()
         this.layout = new Gwt.Gui.VBox ();
         this.Add (this.layout);
         this.SetBorderSpacing (6);
-         
-        this.title_label = new Gwt.Gui.StaticText ("Comprobante De Egreso");
-        this.title_label.SetWidth (170);
      
         this.slider = new Gwt.Gui.Slider (3);
-        this.slider.SetSize (this.layout.GetWidth (), this.layout.GetHeight ()*0.8);
+        this.slider.SetSize (this.layout.GetWidth (), this.layout.GetHeight ()*0.85);
         this.slider.Setup ();
     
         this.save_button = new Gwt.Gui.ButtonSvUpDl ();
@@ -4843,7 +5144,6 @@ cedeg = (function ()
         this.records = [];
         this.update = false;
         
-        this.layout.Add (this.title_label);
         this.layout.Add (this.slider);
         this.layout.Add (this.save_button);
         

@@ -180,10 +180,9 @@ cedeg = (function ()
 
     function cedeg()
     {
-        Gwt.Gui.Window.call (this);
+        Gwt.Gui.Window.call (this, "Comprobante De Egreso");
         
         this.layout = null;
-        this.title_label = null;
         this.number = null;
         this.city = null;
         this.date = null;
@@ -209,9 +208,6 @@ cedeg = (function ()
     {
         this.layout.FinalizeVBox ();
         this.layout = null;
-        
-        this.title_label.FinalizeStaticText ();
-        this.title_label = null;
         
         this.number.FinalizeEntry ();
         this.number = null;
@@ -266,12 +262,9 @@ cedeg = (function ()
         this.layout = new Gwt.Gui.VBox ();
         this.Add (this.layout);
         this.SetBorderSpacing (6);
-         
-        this.title_label = new Gwt.Gui.StaticText ("Comprobante De Egreso");
-        this.title_label.SetWidth (170);
      
         this.slider = new Gwt.Gui.Slider (3);
-        this.slider.SetSize (this.layout.GetWidth (), this.layout.GetHeight ()*0.8);
+        this.slider.SetSize (this.layout.GetWidth (), this.layout.GetHeight ()*0.85);
         this.slider.Setup ();
     
         this.save_button = new Gwt.Gui.ButtonSvUpDl ();
@@ -291,7 +284,6 @@ cedeg = (function ()
         this.records = [];
         this.update = false;
         
-        this.layout.Add (this.title_label);
         this.layout.Add (this.slider);
         this.layout.Add (this.save_button);
         
