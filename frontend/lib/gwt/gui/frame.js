@@ -242,7 +242,7 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
     if (this.PositionLeft === Gwt.Gui.WIN_POS_CENTER && this.PositionTop === undefined)
     {
         var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2);
-        var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2);
+        var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2) - 24;
     }
     else if (this.PositionLeft !== undefined && this.PositionTop !== undefined)
     {
@@ -253,11 +253,11 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
                 break;
             
             case Gwt.Gui.WIN_POS_CENTER:
-                var left_ = (Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2;
+                var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2);
                 break;
 			
             case Gwt.Gui.WIN_POS_RIGHT:
-                var left_ = (Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())-2;
+                var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())-2);
                 break;
 				
             default:
@@ -271,11 +271,11 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
                 break;
 				
             case Gwt.Gui.WIN_POS_CENTER:
-                var top_ = (Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2;
+                var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2) - 24;
                 break;
 				
             case Gwt.Gui.WIN_POS_BOTTOM:
-                var top_ = (Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())-2;
+                var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())-2);
                 break;
 				
             default:

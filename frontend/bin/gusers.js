@@ -6,7 +6,7 @@ function gusers ()
 {
 	Gwt.Gui.Window.call (this, "Usuarios");
 	
-	this.SetSize (256, 420);
+	this.SetSize (256, 440);
 	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
 
 	this.layout = new Gwt.Gui.VBox ();

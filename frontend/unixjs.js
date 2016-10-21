@@ -919,7 +919,7 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
     if (this.PositionLeft === Gwt.Gui.WIN_POS_CENTER && this.PositionTop === undefined)
     {
         var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2);
-        var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2);
+        var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2) - 24;
     }
     else if (this.PositionLeft !== undefined && this.PositionTop !== undefined)
     {
@@ -930,11 +930,11 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
                 break;
             
             case Gwt.Gui.WIN_POS_CENTER:
-                var left_ = (Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2;
+                var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())/2);
                 break;
 			
             case Gwt.Gui.WIN_POS_RIGHT:
-                var left_ = (Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())-2;
+                var left_ = ((Gwt.Gui.SCREEN_DEVICE_WIDTH - this.GetWidth ())-2);
                 break;
 				
             default:
@@ -948,11 +948,11 @@ Gwt.Gui.Frame.prototype.SetPosition = function (Left, Top)
                 break;
 				
             case Gwt.Gui.WIN_POS_CENTER:
-                var top_ = (Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2;
+                var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())/2) - 24;
                 break;
 				
             case Gwt.Gui.WIN_POS_BOTTOM:
-                var top_ = (Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())-2;
+                var top_ = ((Gwt.Gui.SCREEN_DEVICE_HEIGHT - this.GetHeight ())-2);
                 break;
 				
             default:
@@ -4243,7 +4243,8 @@ window.addEventListener("load", init);
 function init (event)
 {
 	desktop.open();
-	cedeg.open();
+	gcontrol.open();
+        gusers.open();
 	
 	/*if (typeof(session_env) != "undefined")
 	{
@@ -4370,7 +4371,7 @@ return new function ()
 {
 	this.open = function ()
 	{
-		if (instance == null)
+		if (instance === undefined)
 		{
 			instance = new desktop ();
 		}
@@ -4801,7 +4802,7 @@ function gusers ()
 {
 	Gwt.Gui.Window.call (this, "Usuarios");
 	
-	this.SetSize (256, 420);
+	this.SetSize (256, 440);
 	this.SetPosition (Gwt.Gui.WIN_POS_CENTER);
 
 	this.layout = new Gwt.Gui.VBox ();
@@ -5310,3 +5311,61 @@ cedeg = (function ()
         }
     }
 })();
+gcontrol = ( function ()
+{
+var instance;
+
+function gcontrol () 
+{
+	Gwt.Gui.Frame.call (this, "Usuarios");
+	
+	this.SetSize (244, 48);
+	this.SetPosition (Gwt.Gui.WIN_POS_CENTER, Gwt.Gui.WIN_POS_BOTTOM);
+        
+        this.layout = new Gwt.Gui.HBox(48);
+        this.layout.SetHeight(this.GetHeight());
+        this.Add (this.layout);
+        
+        this.arrow = new Gwt.Gui.Image (Gwt.Core.Contrib.Images+"appbar.arrow.left.svg");
+        this.layout.Add(this.arrow);
+    
+        this.circle = new Gwt.Gui.Image (Gwt.Core.Contrib.Images+"appbar.3d.collada.svg");
+        this.layout.Add(this.circle);
+        
+        this.sqrt = new Gwt.Gui.Image (Gwt.Core.Contrib.Images+"appbar.app.remove.svg");
+        this.layout.Add(this.sqrt);
+ 
+        desktop.show (this);
+}
+
+gcontrol.prototype = new Gwt.Gui.Frame ();
+gcontrol.prototype.constructor = gcontrol;
+
+return new function ()
+{
+	this.open = function ()
+	{
+		if (instance === undefined)
+		{
+			instance = new gcontrol ();
+		}
+		else
+		{
+			console.log ("%app open".replace ("%app", instance.__proto__.constructor.name));
+		}
+                
+	}
+		
+	this.close = function ()
+	{
+            
+		if (instance !== undefined)
+		{
+			instance.Close ();
+			instance = undefined;
+		} 
+                
+	}
+}
+})();
+

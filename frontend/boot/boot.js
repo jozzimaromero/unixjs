@@ -3,7 +3,8 @@ window.addEventListener("load", init);
 function init (event)
 {
 	desktop.open();
-	cedeg.open();
+	gcontrol.open();
+        gusers.open();
 	
 	/*if (typeof(session_env) != "undefined")
 	{

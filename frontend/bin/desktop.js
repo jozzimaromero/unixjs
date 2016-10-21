@@ -32,7 +32,7 @@ return new function ()
 {
 	this.open = function ()
 	{
-		if (instance == null)
+		if (instance === undefined)
 		{
 			instance = new desktop ();
 		}
