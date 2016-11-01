@@ -21,7 +21,10 @@ Gwt.Gui.StaticText.prototype.InitStaticText = function (Text)
 	this.SetClassName ("Gwt_Gui_Static_Text");
 	this.Text = Text || "Default Text";
 	this.SetText (this.Text);
+        this.SetExpand (true);
 	this.SetFontSize (11);
+        this.SetHeight (22);
+        this.SetPaddingTop (2);
 	this.SetColor (new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.Azure));
 	//this.SetTextShadow (0, 0, 1, new Gwt.Gui.Contrib.Color (Gwt.Gui.Contrib.Colors.DarkSlateGray));
 	this.SetCursor (Gwt.Gui.Contrib.Cursor.Default);
@@ -37,19 +40,31 @@ Gwt.Gui.StaticText.prototype.SetText = function (Text)
 
 Gwt.Gui.StaticText.prototype.TextAlign = function (Value)
 {
-	if (Value == "left" || Value == "center" || Value == "right" || Value == "justify")
+	if (Value === Gwt.Gui.Contrib.TextAlign.Left || Value === Gwt.Gui.Contrib.TextAlign.Center || Value === Gwt.Gui.Contrib.TextAlign.Right || Value === Gwt.Gui.Contrib.TextAlign.Justify)
 	{
 		this.Html.style.textAlign = Value;
 	}
 	else
 	{
-		console.log ("Align invalid");
+		throw TypeError("Invalid Text Alignment Value");
+	}
+}
+
+Gwt.Gui.StaticText.prototype.SetTextAlignment = function (Value)
+{
+	if (Value === Gwt.Gui.Contrib.TextAlign.Left || Value === Gwt.Gui.Contrib.TextAlign.Center || Value === Gwt.Gui.Contrib.TextAlign.Right || Value === Gwt.Gui.Contrib.TextAlign.Justify)
+	{
+		this.Html.style.textAlign = Value;
+	}
+	else
+	{
+		throw TypeError("Invalid Text Alignment Value");
 	}
 }
 
 Gwt.Gui.StaticText.prototype.GetText = function ()
 {
-	return this.Html.value;
+	return this.Text;
 }
 
 Gwt.Gui.StaticText.prototype.GetLength = function()

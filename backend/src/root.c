@@ -16,8 +16,8 @@
 //home
 int home (struct http_request *req)
 {
-    sql_state r = init_database_system ();
-    kore_log (LOG_INFO, "%s", r.msg);
+    //sql_state r = init_database_system ();
+    //kore_log (LOG_INFO, "%s", r.msg);
     const char *msg = "hello world!";
     http_response (req, 200, msg,  strlen(msg));
     return (KORE_RESULT_OK);
@@ -35,8 +35,8 @@ int v_params_enabled (struct http_request *req, char *param)
 
 
 
-//insert user
-int insert_user (struct http_request *req)
+//user insert
+int user_insert (struct http_request *req)
 {
     char                *data = NULL;
       
@@ -79,8 +79,8 @@ int insert_user (struct http_request *req)
 
 
 
-//update user
-int update_user(struct http_request *req)
+//user update
+int user_update (struct http_request *req)
 {
     char                *data = NULL;
       
@@ -145,8 +145,8 @@ int update_user(struct http_request *req)
 
 
 
-//delete user
-int delete_user (struct http_request *req)
+//user delete
+int user_delete (struct http_request *req)
 {    
     char    *data = NULL;
       
@@ -202,8 +202,8 @@ int delete_user (struct http_request *req)
 
 
 
-//select group
-int select_group (struct http_request *req)
+//group select
+int group_select (struct http_request *req)
 {
     char *data = NULL;
     
@@ -268,8 +268,8 @@ int select_group (struct http_request *req)
 
 
 
-//insert group
-int insert_group (struct http_request *req)
+//group insert
+int group_insert (struct http_request *req)
 {
     char            *data = NULL;
     
@@ -358,8 +358,8 @@ int insert_group (struct http_request *req)
 
 
 
-//update goup
-int update_group (struct http_request *req)
+//group update
+int group_update (struct http_request *req)
 {
     char            *data = NULL;
     
@@ -465,8 +465,8 @@ int update_group (struct http_request *req)
 
 
 
-//delete group
-int delete_group (struct http_request *req)
+//group delete
+int group_delete (struct http_request *req)
 {
     char            *data = NULL;
     if (verify_request (req, &data) == KORE_RESULT_ERROR)
@@ -546,3 +546,4 @@ int delete_group (struct http_request *req)
     
     return (KORE_RESULT_OK);
 }
+
